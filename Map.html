@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOST AMCen Location</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: linear-gradient(rgba(244, 244, 244, 0.82), rgba(244, 244, 244, 0.82)),
+                url('https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/474850167_1121802932861606_3245007256719510821_n%20(1).jpg') center/cover no-repeat fixed;
+    margin:0;
+    padding:20px;
+    text-align:center;
+    min-height:100vh;
+}
+
+h1{
+    color:#003366;
+
+}
+.top-section{
+    max-width:900px;
+    margin:30px auto;
+    display:flex;
+    gap:40px;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.gallery-box,
+.video-box{
+    width:380px;
+    height:300px;
+    background:#fff;
+    border:1px solid #ccc;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+    border-radius:8px;
+    position:relative;
+    overflow:hidden;
+}
+
+.gallery-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.nav-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(0,0,0,.5);
+    color:white;
+    border:none;
+    padding:10px 15px;
+    cursor:pointer;
+    font-size:20px;
+    z-index:2;
+}
+
+.nav-btn:first-of-type{
+    left:10px;
+}
+
+.gallery-box .nav-btn:last-of-type{
+    right:10px;
+}
+
+.banner{
+    background:#007BFF;
+    color:white;
+    padding:15px;
+    border-radius:8px;
+    margin:20px auto;
+    max-width:800px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.location-card{
+    background:#fff;
+    max-width:800px;
+    margin:20px auto;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.location-card h2{
+    color:#007BFF;
+    margin-bottom:10px;
+}
+
+.location-card p{
+    line-height:1.8;
+    color:#333;
+}
+
+#map{
+    height:500px;
+    width:100%;
+    max-width:800px;
+    margin:20px auto;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+</style>
+</head>
+<body>
+
+<h1>📍 DOST AMCen Location</h1>
+<div class="top-section">
+
+    <!-- Photo Slider -->
+    <div class="gallery-box">
+        <button class="nav-btn" onclick="prevPhoto()">❮</button>
+
+        <img id="galleryImage"
+             src="https://via.placeholder.com/400x300?text=Photo+1"
+             alt="DOST AMCen">
+
+        <button class="nav-btn" onclick="nextPhoto()">❯</button>
+    </div>
+
+    <div class="video-box">
+    <video controls width="100%" height="300">
+        <source src="file:///C:/Users/amcen/Downloads/amcen.%20location%20video" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+</div>
+
+<div class="banner">
+    Welcome! Visit us at our office location shown on the map below.
+</div>
+
+<div class="location-card">
+    <h2>We Are Here</h2>
+
+    <p>
+        <strong>DOST Advanced Manufacturing Center (AMCen)</strong><br>
+        Gov't Center Sevilla<br>
+        City of San Fernando, La Union 2500<br>
+        (072) 242-0063<br>
+        0917-840-8256 (Globe)<br>
+        launion@region1.dost.gov.ph
+    </p>
+</div>
+<div style="margin-top:20px;">
+    <a href="https://www.google.com/maps?q=16.597248885914833,120.32113607976675"
+       target="_blank"
+       style="
+            display:inline-block;
+            background:#4285F4;
+            color:white;
+            padding:12px 20px;
+            text-decoration:none;
+            border-radius:6px;
+            font-weight:bold;
+       ">
+        📍 Open in Google Maps
+    </a>
+</div>
+
+<div id="map"></div>
+<script>
+
+const photos = [
+    "https://uploads.onecompiler.io/43b2wmpjm/1782122856484/5816e285-8298-4797-b87a-e8ed9ce233d3.jpg",
+    "https://uploads.onecompiler.io/43b2wmpjm/1782122849749/cafcc593-1943-4035-b179-551c299c006c.jpg",
+    "https://uploads.onecompiler.io/43b2wmpjm/1782122839691/32d9321b-4899-4c19-8a2d-26bb3e67e344.jpg",
+    "https://uploads.onecompiler.io/43b2wmpjm/1782122833705/8fc140a8-797b-41aa-9caf-6b860042e255.jpg",
+    "https://uploads.onecompiler.io/43b2wmpjm/1782122817147/b9e25ead-4868-4c9f-9e86-0ec48a20efd3.jpg"
+];
+
+let current = 0;
+
+function showPhoto(){
+    document.getElementById("galleryImage").src = photos[current];
+}
+
+function nextPhoto(){
+    current = (current + 1) % photos.length;
+    showPhoto();
+}
+
+function prevPhoto(){
+    current = (current - 1 + photos.length) % photos.length;
+    showPhoto();
+}
+
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+const officeLat = 16.597247600688714; 
+const officeLng = 120.3211313858965;
+
+const map = L.map('map').setView([officeLat, officeLng], 15);
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+L.marker([officeLat, officeLng])
+    .addTo(map)
+    .bindPopup(`
+        <b>DOST AMCen</b><br>
+        Gov't Center Sevilla<br>
+        City of San Fernando, La Union
+    `)
+    .openPopup();
+
+setTimeout(() => {
+    map.invalidateSize();
+}, 500);
+</script>
+
+</body>
+</html>

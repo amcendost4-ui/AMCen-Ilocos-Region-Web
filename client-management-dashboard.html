@@ -1,0 +1,3253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Management System</title>
+  <style>
+    :root {
+      --sidebar: #06284a;
+      --sidebar-2: #0b355f;
+      --accent: #1ca6bf;
+      --accent-2: #27c4d8;
+      --bg: #eef2f7;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e6eaf0;
+      --shadow: 0 12px 28px rgba(10, 24, 50, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 330px 1fr;
+      min-height: 100vh;
+    }
+
+    .app.compact-sidebar {
+      grid-template-columns: 92px 1fr;
+    }
+
+    .app.compact-sidebar .brand,
+    .app.compact-sidebar .role,
+    .app.compact-sidebar .status,
+    .app.compact-sidebar .mini-actions,
+    .app.compact-sidebar .menu-item,
+    .app.compact-sidebar .menu-chevron {
+      display: none;
+    }
+
+    .app.compact-sidebar .profile {
+      padding: 22px 10px;
+    }
+
+    .app.compact-sidebar .avatar {
+      width: 58px;
+      height: 58px;
+      font-size: 1.8rem;
+      margin-bottom: 0;
+    }
+
+    .app.compact-sidebar .sidebar-top {
+      justify-content: center;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, var(--sidebar) 0%, #082e55 100%);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset -1px 0 0 rgba(255,255,255,0.05);
+    }
+
+    .sidebar-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.12);
+    }
+
+    .brand {
+      font-size: 1.45rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .gear {
+      font-size: 1.4rem;
+      opacity: 0.9;
+      border: none;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .profile {
+      padding: 34px 26px 22px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      margin: 0 auto 18px;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      color: #7d8792;
+      font-size: 3rem;
+      border: 4px solid #29c7d6;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+    }
+
+    .role {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .status {
+      color: #29ff59;
+      font-size: 1rem;
+    }
+
+    .mini-actions {
+      display: flex;
+      justify-content: center;
+      gap: 36px;
+      margin-top: 26px;
+      color: #d6e6f5;
+      font-size: 1.4rem;
+    }
+
+    .mini-actions button {
+      border: none;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font-size: inherit;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .menu {
+      padding: 14px 10px 20px;
+      flex: 1;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #d2dceb;
+      text-decoration: none;
+      padding: 18px 18px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+      transition: background 0.2s ease, transform 0.2s ease;
+      font-size: 1.05rem;
+      width: 100%;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .menu-item:hover {
+      background: rgba(255,255,255,0.06);
+      transform: translateX(2px);
+    }
+
+    .menu-item.active {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    .menu-icon {
+      width: 22px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 1.15rem;
+      opacity: 0.95;
+    }
+
+    .menu-chevron {
+      margin-left: auto;
+      opacity: 0.45;
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 66px;
+      background: linear-gradient(90deg, #1ea8c1 0%, #1fbbc6 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      box-shadow: var(--shadow);
+      position: relative;
+      z-index: 2;
+    }
+
+    .topbar-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .primary-btn {
+      border: none;
+      border-radius: 10px;
+      background: #fff;
+      color: #127f91;
+      padding: 0 16px;
+      height: 36px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    }
+
+    .primary-btn:hover {
+      background: #f5fbfc;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.6);
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .content {
+      padding: 16px 16px 24px;
+      overflow: auto;
+    }
+
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: linear-gradient(135deg, #06284a 0%, #0f5b84 100%);
+    }
+
+    .login-card {
+      width: min(620px, 100%);
+      background: rgba(255,255,255,0.98);
+      border-radius: 18px;
+      padding: 96px;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.22);
+    }
+
+    .login-logo {
+      width: 100%;
+      max-width: 220px;
+      height: 84px;
+      margin: 0 auto 18px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .login-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      background: transparent;
+    }
+
+    .login-card h2 {
+      margin-bottom: 8px;
+      color: #06284a;
+      font-size: 1.6rem;
+    }
+
+    .login-card p {
+      color: #5b6472;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .login-card .field-group {
+      margin-bottom: 14px;
+    }
+
+    .login-card label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cfd8e3;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    .login-card button {
+      width: 100%;
+      padding: 12px 14px;
+      border: none;
+      border-radius: 10px;
+      background: #1ca6bf;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .login-card button:hover {
+      background: #1693a1;
+    }
+
+    .login-message {
+      margin-top: 12px;
+      color: #c0392b;
+      font-size: 0.95rem;
+      min-height: 1.2em;
+    }
+
+    .app.hidden,
+    .login-screen.hidden {
+      display: none !important;
+    }
+
+    .page-title {
+      font-size: 2.05rem;
+      font-weight: 800;
+      color: #464b52;
+      margin: 4px 0 14px;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+
+    .kpi {
+      background: var(--panel);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 110px;
+    }
+
+    .kpi-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      flex: 0 0 auto;
+    }
+
+    .kpi-label {
+      color: #8a8f99;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .kpi-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #3a3f45;
+    }
+
+    .section {
+      margin-bottom: 22px;
+    }
+
+    .next-schedule-notice {
+      margin: 10px 0 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: #eef7ff;
+      color: #0f4c81;
+      font-weight: 600;
+      border: 1px solid #cfe7ff;
+    }
+
+    .next-schedule-notice.has-data {
+      background: #f0fdf4;
+      color: #166534;
+      border-color: #bbf7d0;
+    }
+
+    .cms-section {
+      display: none;
+    }
+
+    .cms-section.visible {
+      display: block;
+    }
+
+    .section-anchor {
+      scroll-margin-top: 100px;
+    }
+
+    .section h2 {
+      font-size: 1.95rem;
+      color: #494d53;
+      margin-bottom: 12px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .client-list {
+      list-style: none;
+    }
+
+    .client-view-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px 8px;
+      color: #334155;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .client-view-controls button {
+      border: 1px solid #dbe3ec;
+      background: #fff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      cursor: pointer;
+      color: #334155;
+    }
+
+    .client-item {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 16px;
+      align-items: center;
+      padding: 18px 18px;
+      border-bottom: 1px solid var(--line);
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      background: transparent;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+    }
+
+    .client-item:last-child {
+      border-bottom: none;
+    }
+
+    .client-item:hover {
+      background: #f7fbfd;
+      transform: translateY(-1px);
+    }
+
+    .client-item:focus-visible {
+      outline: 3px solid rgba(30, 168, 193, 0.35);
+      outline-offset: -3px;
+    }
+
+    .client-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #dcf4f9;
+      color: #1ea8c1;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .client-date-text {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+
+    .client-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .client-company {
+      color: #8a8f99;
+      font-size: 0.98rem;
+    }
+
+    .client-meta {
+      color: #c0c4cb;
+      font-size: 0.98rem;
+      padding-right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .client-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .client-action-btn {
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: inline-grid;
+      place-items: center;
+      color: #fff;
+    }
+
+    .client-action-btn.edit {
+      background: #1ea8c1;
+    }
+
+    .client-action-btn.delete {
+      background: #d14a5a;
+    }
+
+    .client-action-btn.move,
+    .booking-action-btn.move {
+      background: #1f9d55;
+    }
+
+    .booking-action-btn {
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: inline-grid;
+      place-items: center;
+      color: #fff;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.98rem;
+    }
+
+    .table tbody tr {
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+      background: #f7fbfd;
+    }
+
+    .table tbody tr:focus-visible {
+      outline: 3px solid rgba(30, 168, 193, 0.35);
+      outline-offset: -3px;
+    }
+
+    .schedule-calendar {
+      padding: 18px;
+    }
+
+    .calendar-scroll {
+      overflow-x: auto;
+      overflow-y: hidden;
+      width: 100%;
+    }
+
+    .calendar-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .calendar-header h3 {
+      font-size: 1.2rem;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .calendar-header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .calendar-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eef6ff;
+      color: #0b5cab;
+      font-weight: 700;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      grid-auto-rows: 150px;
+      align-items: start;
+      gap: 10px;
+      width: 100%;
+      padding: 0;
+      font-size: 1rem;
+    }
+
+    .calendar-day {
+      height: 150px;
+      min-height: 150px;
+      max-height: 150px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fbfdff;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      padding-bottom: 56px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .calendar-day.empty {
+      background: #f7f9fc;
+      opacity: 0.72;
+    }
+
+    .calendar-day.today {
+      border-color: rgba(30, 168, 193, 0.35);
+      box-shadow: 0 10px 18px rgba(30, 168, 193, 0.08);
+    }
+
+    .calendar-day-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: #6b7280;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .calendar-date {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #1f2937;
+      line-height: 1;
+    }
+
+    .calendar-events {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 4px;
+      overflow: auto;
+    }
+
+    .calendar-event {
+      background: linear-gradient(135deg, #0b5cab 0%, #177fcb 100%);
+      color: #fff;
+      border-radius: 10px;
+      padding: 8px 10px;
+      box-shadow: 0 8px 16px rgba(11, 92, 171, 0.16);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-height: 44px;
+      max-height: 60px;
+      overflow: hidden;
+    }
+
+    .calendar-event-title {
+      font-weight: 700;
+      font-size: 0.84rem;
+      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .calendar-event-meta {
+      font-size: 0.74rem;
+      opacity: 0.92;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .calendar-note {
+      font-size: 0.84rem;
+      color: #6b7280;
+      margin-top: auto;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .table tbody tr.mail-row {
+      cursor: pointer;
+    }
+
+    .table tbody tr.mail-row.unread {
+      background: #f8fbff;
+      box-shadow: inset 3px 0 0 #2563eb;
+    }
+
+    .mail-notifier {
+      margin-top: 6px;
+      color: #dc2626;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .mail-notifier.hidden,
+    .mail-badge.hidden {
+      display: none;
+    }
+
+    .mail-badge {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 8px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .table th {
+      color: #6b7280;
+      font-weight: 700;
+      background: #fafbfc;
+    }
+
+    .schedule-edit-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 180px;
+    }
+
+    .schedule-date-input,
+    .schedule-time-input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: #fff;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .pill.ok { background: #e8fbef; color: #1f8a44; }
+    .pill.wait { background: #fff4da; color: #b57b00; }
+    .pill.fail { background: #ffe4e8; color: #c62828; }
+
+    .booking-status-select {
+      width: 100%;
+      max-width: 132px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+      outline: none;
+      text-align: center;
+    }
+
+    .booking-status-select.ok { background: #e8fbef; color: #1f8a44; }
+    .booking-status-select.wait { background: #fff4da; color: #b57b00; }
+    .booking-status-select.fail { background: #ffe4e8; color: #c62828; }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .search-box button {
+      border: none;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      padding: 0 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .search-box button {
+      border: none;
+      border-radius: 10px;
+      background: var(--accent);
+      color: #fff;
+      padding: 0 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 50;
+      padding: 18px;
+      overflow: auto;
+    }
+
+    .modal {
+      max-width: 900px;
+      margin: 24px auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 36px;
+      color: #003366;
+      font-weight: 300;
+    }
+
+    .modal-logo {
+      width: 100px;
+      flex-shrink: 0;
+    }
+
+    .modal-logo img {
+      width: 100%;
+      display: block;
+    }
+
+    .modal-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .close-btn {
+      border: none;
+      border-radius: 10px;
+      background: #eef2f7;
+      color: #334155;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .copy-btn {
+      border: none;
+      border-radius: 10px;
+      background: #e7f7fb;
+      color: #0b7285;
+      padding: 0 14px;
+      height: 42px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      background: #d5f0f7;
+    }
+
+    .paste-btn {
+      border: none;
+      border-radius: 10px;
+      background: #eef7ea;
+      color: #2e6b2e;
+      padding: 0 14px;
+      height: 42px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .paste-btn:hover {
+      background: #e0f0da;
+    }
+
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .modal-field {
+      margin-bottom: 14px;
+    }
+
+    .modal-field label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      color: #444;
+      font-size: 0.95rem;
+    }
+
+    .modal-field input,
+    .modal-field textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d9cfa3;
+      border-radius: 4px;
+      font-size: 15px;
+    }
+
+    .modal-field textarea {
+      resize: vertical;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .modal-section-title {
+      margin: 22px 0 14px;
+      color: #333;
+      font-size: 28px;
+      font-weight: 300;
+    }
+
+    .modal-button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .modal-button-group button {
+      flex: 1;
+      min-width: 150px;
+      padding: 15px;
+      background: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .modal-button-group button:hover {
+      background: #0055aa;
+    }
+
+    .modal-button-group .icon-button {
+      flex: 0;
+      min-width: 50px;
+      padding: 15px 12px;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .decision-btn.accept-btn {
+      background: #e8fbef;
+      color: #1f8a44;
+    }
+
+    .decision-btn.accept-btn:hover {
+      background: #d7f5e0;
+    }
+
+    .decision-btn.decline-btn {
+      background: #ffe4e8;
+      color: #c62828;
+    }
+
+    .decision-btn.decline-btn:hover {
+      background: #ffd6dc;
+    }
+
+    .detail-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .detail-item {
+      padding: 14px;
+      border: 1px solid #e4e8ee;
+      border-radius: 8px;
+      background: #fafcff;
+    }
+
+    .detail-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .detail-label {
+      display: block;
+      color: #6b7280;
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .detail-value {
+      color: #1f2937;
+      font-size: 0.98rem;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    @media (max-width: 720px) {
+      .detail-list {
+        grid-template-columns: 1fr;
+      }
+    }
+    .modal-row {
+      display: flex;
+      gap: 15px;
+    }
+    .modal-col {
+      flex: 1;
+    }
+    .modal-body {
+      display: block;
+    }
+    .modal-body label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      color: #444;
+    }
+    .modal-body input,
+    .modal-body textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #dfe6f1;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #fbfcff;
+      color: #1f2937;
+    }
+    .modal-body textarea {
+      resize: vertical;
+    }
+    .modal-form-wrap {
+      background: #fff;
+    }
+
+    .add-client-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 50;
+      padding: 18px;
+      overflow: auto;
+    }
+
+    .clients-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .open-add-client-btn {
+      min-width: 150px;
+      height: 42px;
+      padding: 0 18px;
+      border: none;
+      border-radius: 10px;
+      background: #003366;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    }
+
+    .open-add-client-btn:hover {
+      background: #0055aa;
+    }
+
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { min-height: auto; }
+      .grid-2, .kpis { grid-template-columns: 1fr; }
+      .app.compact-sidebar { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .topbar { flex-direction: column; gap: 10px; height: auto; padding: 14px 16px; align-items: flex-start; }
+      .topbar-actions { flex-wrap: wrap; }
+      .content { padding: 12px; }
+      .client-item { grid-template-columns: 1fr; }
+      .client-meta { padding-right: 0; }
+      .modal-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-screen" id="adminLoginScreen">
+    <div class="login-card">
+      <div class="login-logo">
+        <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Untitled%20design%20(2).png" alt="DOSTXAMCen logo">
+      </div>
+      <h2>Admin Access Only</h2>
+      <p>Enter your administrator credentials to access the Client Management System.</p>
+      <form id="adminLoginForm">
+        <div class="field-group">
+          <label for="adminUsername">Username</label>
+          <input id="adminUsername" name="username" type="text" required>
+        </div>
+        <div class="field-group">
+          <label for="adminPassword">Password</label>
+          <input id="adminPassword" name="password" type="password" required>
+        </div>
+        <button type="submit">Login</button>
+        <div class="login-message" id="adminLoginMessage"></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="app hidden" id="cmsApp">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="brand">CMS PANEL</div>
+        <button class="gear" id="settingsBtn" type="button" title="Settings">⚙</button>
+      </div>
+
+      <div class="profile">
+        <div class="avatar">👤</div>
+        <div class="role">System Administrator</div>
+        <div class="status">Online</div>
+        <div class="mini-actions" aria-label="profile actions">
+          <button type="button" id="profileBtn" title="Profile">👤</button>
+          <button type="button" id="toolsBtn" title="Tools">🔧</button>
+          <button type="button" id="logoutSidebarBtn" title="Logout">↪</button>
+        </div>
+      </div>
+
+      <nav class="menu" id="cmsMenu">
+        <button class="menu-item active" type="button" data-target="dashboard"><span class="menu-icon">🏠</span>Dashboard</button>
+        <button class="menu-item" type="button" data-target="clients"><span class="menu-icon">👤</span>Clients List</button>
+        <button class="menu-item" type="button" data-target="mails"><span class="menu-icon">✉</span>Mails</button>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-title">Client Management System</div>
+        <div class="topbar-actions">
+          <button class="icon-btn" type="button" id="refreshBtn" title="Refresh">↻</button>
+          <button class="icon-btn" type="button" id="logoutBtn" title="Logout">⟳</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <h1 class="page-title section-anchor" id="dashboard-title">Dashboard &amp; Schedules</h1>
+
+        <section class="kpis">
+          <div class="kpi">
+            <div class="kpi-badge" style="background:#d9ecff;color:#0b6efd;">👤</div>
+            <div>
+              <div class="kpi-label">Clients</div>
+              <div class="kpi-value" id="clientCount">3</div>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-badge" style="background:#dbf0df;color:#1f9d55;">✉</div>
+            <div>
+              <div class="kpi-label">Mails</div>
+              <div class="kpi-value" id="mailCount">Active</div>
+              <div class="mail-notifier hidden" id="mailNotifier"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section cms-section visible" id="dashboard">
+          <h2>Bookings</h2>
+          <div class="next-schedule-notice" id="nextScheduleNotice">Checking upcoming schedule…</div>
+          <div class="panel">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Schedule</th>
+                  <th>Status</th>
+                  <th>Move</th>
+                </tr>
+              </thead>
+              <tbody id="bookingRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section section-anchor cms-section" id="clients">
+          <div class="clients-header">
+            <h2>Clients</h2>
+            <button type="button" class="open-add-client-btn" id="openAddClientBtn" title="Add New Client" aria-label="Add New Client">Add New Client</button>
+          </div>
+          <div class="panel" style="margin-bottom: 16px;">
+            <div class="search-box">
+              <input id="searchInput" type="text" placeholder="Search clients, company, or status">
+              <button type="button" id="searchBtn">Find</button>
+            </div>
+            <div style="padding: 0 16px 16px; color: var(--muted);" id="searchResult">Type a name to filter the client list.</div>
+          </div>
+          <div class="grid-2">
+            <div class="panel">
+              <div style="padding: 16px 16px 0; font-weight: 700; color: #334155;">Recently Added Clients</div>
+              <ul class="client-list" id="recentClients"></ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="section section-anchor cms-section" id="mails">
+          <h2>Mails <span class="mail-badge hidden" id="mailInboxBadge"></span></h2>
+          <div class="panel">
+            <table class="table">
+              <thead>
+                <tr><th>Sender</th><th>Subject</th><th>Status</th><th>Received</th></tr>
+              </thead>
+              <tbody id="mailRows">
+                <tr><td>naveen@client.com</td><td>Booking Confirmation</td><td><span class="pill ok">Sent</span></td><td>2026-06-22</td></tr>
+                <tr><td>sidharth@client.com</td><td>Request for Update</td><td><span class="pill wait">Draft</span></td><td>2026-06-22</td></tr>
+                <tr><td>admin@cms.local</td><td>Weekly Report</td><td><span class="pill ok">Sent</span></td><td>2026-06-22</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="mailModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mailModalTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-logo">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Untitled%20design%20(2).png" alt="DOST AMCen Logo">
+          </div>
+          <h2 id="mailModalTitle">Mail Details</h2>
+        </div>
+        <button type="button" class="close-btn" id="closeMailModal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="detail-list" id="mailDetailList"></div>
+        <div class="modal-button-group">
+          <button type="button" class="decision-btn accept-btn" id="acceptBookingBtn">Booking Accepted</button>
+          <button type="button" class="decision-btn decline-btn" id="declineBookingBtn">Booking Declined</button>
+          <button type="button" id="openBookingFromMailBtn">Open Booking Form</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="clientModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="clientModalTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-logo">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Untitled%20design%20(2).png" alt="DOST AMCen Logo">
+          </div>
+          <h2 id="clientModalTitle">DOST X AMCen Booking Request Form</h2>
+        </div>
+        <button type="button" class="paste-btn" id="pasteClientDetailsBtn">Paste Details</button>
+        <button type="button" class="copy-btn" id="copyClientDetailsBtn">Copy Details</button>
+        <button type="button" class="close-btn" id="closeClientModal">✕</button>
+      </div>
+
+      <form id="clientForm" class="modal-body">
+        <h2 class="modal-section-title">Customer Information</h2>
+
+        <div class="modal-row">
+          <div class="modal-col">
+            <label>First Name</label>
+            <input type="text" id="clientFirstName" required>
+          </div>
+          <div class="modal-col">
+            <label>Last Name</label>
+            <input type="text" id="clientLastName" required>
+          </div>
+        </div>
+
+        <label>Email Address</label>
+        <input type="email" id="clientEmail" required>
+
+        <label>Phone Number</label>
+        <input type="tel" id="clientPhone" required>
+
+        <label>Institution / Organization</label>
+        <input type="text" id="clientInstitution">
+
+        <h2 class="modal-section-title">Booking Details</h2>
+
+        <div class="modal-row">
+          <div class="modal-col">
+            <label>Date Requested</label>
+            <input type="date" id="clientDateRequested" required>
+          </div>
+          <div class="modal-col">
+            <label>Time Requested</label>
+            <input type="time" id="clientTimeRequested" required>
+          </div>
+        </div>
+
+        <label>Purpose of Request</label>
+        <input type="text" id="clientPurpose" placeholder="Research, Testing, Training, Seminar, etc." required>
+
+        <h2 class="modal-section-title">Service Information</h2>
+
+        <label>Equipment or Facility Needed</label>
+        <input type="text" id="clientFacility" required>
+
+        <label>Number of Participants</label>
+        <input type="number" id="clientParticipants">
+
+        <label>Special Requests / Additional Information</label>
+        <textarea id="clientNotes" rows="5" placeholder="Any extra client details"></textarea>
+
+        <div class="modal-button-group">
+          <button type="submit" id="saveClientBtn">Add Client</button>
+          <button type="button" class="icon-button" id="cancelClientBtn" title="Print Form">🖨️</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay add-client-panel" id="addClientPanel" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="addClientTitle">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-logo">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Untitled%20design%20(2).png" alt="DOST AMCen Logo">
+          </div>
+          <h2 id="addClientTitle">Add Client</h2>
+        </div>
+        <button type="button" class="paste-btn" id="pasteAddClientDetailsBtn">Paste Details</button>
+        <button type="button" class="copy-btn" id="copyAddClientDetailsBtn">Copy Details</button>
+        <button type="button" class="close-btn" id="closeAddClientModalBtn">✕</button>
+      </div>
+
+      <form id="addClientForm" class="modal-body">
+        <h2 class="modal-section-title">Customer Information</h2>
+
+        <div class="modal-row">
+          <div class="modal-col">
+            <label>First Name</label>
+            <input type="text" id="addClientFirstName" required>
+          </div>
+          <div class="modal-col">
+            <label>Last Name</label>
+            <input type="text" id="addClientLastName" required>
+          </div>
+        </div>
+
+        <label>Email Address</label>
+        <input type="email" id="addClientEmail" required>
+
+        <label>Phone Number</label>
+        <input type="tel" id="addClientPhone" required>
+
+        <label>Institution / Organization</label>
+        <input type="text" id="addClientInstitution">
+
+        <h2 class="modal-section-title">Booking Details</h2>
+
+        <div class="modal-row">
+          <div class="modal-col">
+            <label>Date Requested</label>
+            <input type="date" id="addClientDateRequested" required>
+          </div>
+          <div class="modal-col">
+            <label>Time Requested</label>
+            <input type="time" id="addClientTimeRequested" required>
+          </div>
+        </div>
+
+        <label>Purpose of Request</label>
+        <input type="text" id="addClientPurpose" placeholder="Research, Testing, Training, Seminar, etc." required>
+
+        <h2 class="modal-section-title">Service Information</h2>
+
+        <label>Equipment or Facility Needed</label>
+        <input type="text" id="addClientFacility" required>
+
+        <label>Number of Participants</label>
+        <input type="number" id="addClientParticipants">
+
+        <label>Special Requests / Additional Information</label>
+        <textarea id="addClientNotes" rows="5" placeholder="Any extra client details"></textarea>
+
+        <div class="modal-button-group">
+          <button type="submit" id="saveAddClientBtn">Add New Client</button>
+          <button type="button" class="icon-button" id="clearAddClientBtn" title="Clear Form">↺</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const clientStorageKey = 'amcen_clients_dashboard';
+
+    const createClientId = () => {
+      if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+        return window.crypto.randomUUID();
+      }
+      return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    };
+
+    const defaultClients = [
+      { name: 'Naveen Singh', company: 'ghj pvt ltd', status: 'Recently', initial: '3' },
+      { name: 'Sidharth Sukla', company: 'Infosys Pvt Ltd', status: 'Recently', initial: '2' },
+      { name: 'Sanjay Malhotra', company: 'Malhotra Labs', status: 'Recently', initial: '1' },
+      { name: 'Riya Fernandez', company: 'DOST Research Unit', status: 'Active', initial: 'R' },
+      { name: 'Marco Reyes', company: 'Metro Logistics', status: 'Active', initial: 'M' },
+      { name: 'Ava Cruz', company: 'Cruz Tech', status: 'Pending', initial: 'A' },
+    ];
+
+    let clients = [];
+
+    const bookingStorageKey = 'amcen_bookings_dashboard';
+
+    const defaultBookings = [
+      { client: 'Naveen Singh', schedule: 'Mon, 10:00 AM', status: 'Confirmed', dateRequested: '2026-07-06', timeRequested: '10:00' },
+      { client: 'Sidharth Sukla', schedule: 'Tue, 1:30 PM', status: 'Pending', dateRequested: '2026-07-07', timeRequested: '13:30' },
+      { client: 'Sanjay Malhotra', schedule: 'Wed, 9:00 AM', status: 'Cancelled', dateRequested: '2026-07-08', timeRequested: '09:00' },
+      { client: 'Riya Fernandez', schedule: 'Thu, 2:15 PM', status: 'Confirmed', dateRequested: '2026-07-09', timeRequested: '14:15' },
+    ];
+
+    const normalizeBooking = (booking) => ({
+      id: booking.id || createClientId(),
+      client: booking.client || '',
+      schedule: booking.schedule || '',
+      status: booking.status || 'Pending',
+      company: booking.company || '',
+      dateRequested: booking.dateRequested || '',
+      timeRequested: booking.timeRequested || '',
+      purpose: booking.purpose || '',
+      facility: booking.facility || '',
+      participants: booking.participants || '',
+      notes: booking.notes || '',
+    });
+
+    const getStoredBookings = () => {
+      try {
+        const raw = localStorage.getItem(bookingStorageKey);
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const saveStoredBookings = (items) => {
+      localStorage.setItem(bookingStorageKey, JSON.stringify(items));
+    };
+
+    const getInitialBookings = () => {
+      const storedBookings = getStoredBookings();
+      if (storedBookings.length) {
+        return storedBookings.map(normalizeBooking);
+      }
+      return defaultBookings.map(normalizeBooking);
+    };
+
+    const recentClients = document.getElementById('recentClients');
+    const bookingRows = document.getElementById('bookingRows');
+    const mailCount = document.getElementById('mailCount');
+    const mailNotifier = document.getElementById('mailNotifier');
+    const mailInboxBadge = document.getElementById('mailInboxBadge');
+    const scheduleCalendar = document.getElementById('scheduleCalendar');
+    const clientInfoSummary = document.getElementById('clientInfoSummary');
+    const clientScheduleClient = document.getElementById('clientScheduleClient');
+    const clientScheduleDate = document.getElementById('clientScheduleDate');
+    const clientScheduleTime = document.getElementById('clientScheduleTime');
+    const clientScheduleSaveBtn = document.getElementById('clientScheduleSaveBtn');
+    const saveClientFromDashboardBtn = document.getElementById('saveClientFromDashboardBtn');
+    const deleteClientFromDashboardBtn = document.getElementById('deleteClientFromDashboardBtn');
+    let activeClientForSchedule = null;
+    const mailRows = document.getElementById('mailRows');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchResult = document.getElementById('searchResult');
+    const app = document.getElementById('cmsApp');
+    const adminLoginScreen = document.getElementById('adminLoginScreen');
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    const adminLoginMessage = document.getElementById('adminLoginMessage');
+    const adminUsernameInput = document.getElementById('adminUsername');
+    const adminPasswordInput = document.getElementById('adminPassword');
+    const ADMIN_USERNAME = 'DOSTXAMCen';
+    const ADMIN_PASSWORD = '@dm!n_@R3Gi0n#2025';
+    const AUTH_STORAGE_KEY = 'cms_admin_auth';
+
+    const showLoginScreen = (message = '') => {
+      app.classList.add('hidden');
+      adminLoginScreen.classList.remove('hidden');
+      adminLoginMessage.textContent = message;
+      adminLoginForm.reset();
+      adminUsernameInput.focus();
+    };
+
+    const showDashboard = () => {
+      adminLoginScreen.classList.add('hidden');
+      app.classList.remove('hidden');
+      adminLoginMessage.textContent = '';
+    };
+
+    adminLoginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const username = adminUsernameInput.value.trim();
+      const password = adminPasswordInput.value.trim();
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        localStorage.setItem(AUTH_STORAGE_KEY, 'true');
+        showDashboard();
+      } else {
+        adminLoginMessage.textContent = 'Invalid admin credentials.';
+      }
+    });
+
+    if (localStorage.getItem(AUTH_STORAGE_KEY) === 'true') {
+      showDashboard();
+    } else {
+      showLoginScreen();
+    }
+    const menuButtons = Array.from(document.querySelectorAll('#cmsMenu .menu-item'));
+    const refreshBtn = document.getElementById('refreshBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const logoutSidebarBtn = document.getElementById('logoutSidebarBtn');
+    const settingsBtn = document.getElementById('settingsBtn');
+    const profileBtn = document.getElementById('profileBtn');
+    const toolsBtn = document.getElementById('toolsBtn');
+    const openAddClientBtn = document.getElementById('openAddClientBtn');
+    const addClientTitle = document.getElementById('addClientTitle');
+    const saveAddClientBtn = document.getElementById('saveAddClientBtn');
+    const addClientForm = document.getElementById('addClientForm');
+    const addClientFirstName = document.getElementById('addClientFirstName');
+    const addClientLastName = document.getElementById('addClientLastName');
+    const addClientEmail = document.getElementById('addClientEmail');
+    const addClientPhone = document.getElementById('addClientPhone');
+    const addClientInstitution = document.getElementById('addClientInstitution');
+    const addClientDateRequested = document.getElementById('addClientDateRequested');
+    const addClientTimeRequested = document.getElementById('addClientTimeRequested');
+    const addClientPurpose = document.getElementById('addClientPurpose');
+    const addClientFacility = document.getElementById('addClientFacility');
+    const addClientParticipants = document.getElementById('addClientParticipants');
+    const addClientNotes = document.getElementById('addClientNotes');
+    const addClientPanel = document.getElementById('addClientPanel');
+    const closeAddClientModalBtn = document.getElementById('closeAddClientModalBtn');
+    const pasteAddClientDetailsBtn = document.getElementById('pasteAddClientDetailsBtn');
+    const copyAddClientDetailsBtn = document.getElementById('copyAddClientDetailsBtn');
+    const clearAddClientBtn = document.getElementById('clearAddClientBtn');
+    const clientModal = document.getElementById('clientModal');
+    const clientForm = document.getElementById('clientForm');
+    const pasteClientDetailsBtn = document.getElementById('pasteClientDetailsBtn');
+    const copyClientDetailsBtn = document.getElementById('copyClientDetailsBtn');
+    const closeClientModal = document.getElementById('closeClientModal');
+    const cancelClientBtn = document.getElementById('cancelClientBtn');
+    const saveClientBtn = document.getElementById('saveClientBtn');
+    const mailModal = document.getElementById('mailModal');
+    const mailDetailList = document.getElementById('mailDetailList');
+    const closeMailModal = document.getElementById('closeMailModal');
+    const acceptBookingBtn = document.getElementById('acceptBookingBtn');
+    const declineBookingBtn = document.getElementById('declineBookingBtn');
+    const openBookingFromMailBtn = document.getElementById('openBookingFromMailBtn');
+    const mailboxKey = 'cms_mailbox';
+    const smsApiBase = window.location.protocol === 'file:' ? 'http://localhost:3000' : window.location.origin;
+    let activeMailRecord = null;
+    let editingClientId = null;
+    let activeClientId = null;
+    let clientDisplayIndex = 0;
+    let bookings = getInitialBookings();
+
+    const normalizeClient = (client) => ({
+      id: client.id || createClientId(),
+      name: client.name || '',
+      company: client.company || 'No organization',
+      status: client.status || 'Recently',
+      initial: client.initial || (client.name ? client.name.trim().charAt(0).toUpperCase() : 'C'),
+      email: client.email || '',
+      phone: client.phone || '',
+      dateRequested: client.dateRequested || '',
+      timeRequested: client.timeRequested || '',
+      purpose: client.purpose || '',
+      facility: client.facility || '',
+      participants: client.participants || '',
+      notes: client.notes || ''
+    });
+
+    const getInitialClients = () => {
+      const storedClients = getStoredClients();
+      if (storedClients.length) {
+        return storedClients.map(normalizeClient);
+      }
+      return defaultClients.map(normalizeClient);
+    };
+
+    const getStoredClients = () => {
+      try {
+        const raw = localStorage.getItem(clientStorageKey);
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    };
+
+    const saveStoredClients = (items) => {
+      localStorage.setItem(clientStorageKey, JSON.stringify(items));
+    };
+
+    const upsertClientRecord = (client) => {
+      const normalizedClient = normalizeClient(client);
+      const existingIndex = clients.findIndex((item) => {
+        if (item.id && normalizedClient.id && item.id === normalizedClient.id) return true;
+        if (normalizedClient.email && item.email && item.email.toLowerCase() === normalizedClient.email.toLowerCase()) return true;
+        if (!normalizedClient.name || !item.name) return false;
+        return item.name.toLowerCase() === normalizedClient.name.toLowerCase();
+      });
+
+      if (existingIndex === -1) {
+        clients = [...clients, normalizedClient];
+        saveStoredClients(clients);
+        return normalizedClient;
+      }
+
+      const existingClient = clients[existingIndex];
+      const mergedClient = {
+        ...existingClient,
+        ...normalizedClient,
+        id: existingClient.id || normalizedClient.id,
+        name: normalizedClient.name || existingClient.name,
+        company: normalizedClient.company || existingClient.company,
+        email: normalizedClient.email || existingClient.email,
+      };
+
+      clients = clients.map((item, index) => (index === existingIndex ? mergedClient : item));
+      saveStoredClients(clients);
+      return mergedClient;
+    };
+
+    clients = getInitialClients();
+
+    const isClientSaved = (client) => clients.some((item) => item.id === client?.id);
+
+    const updateClientSchedulePanel = (client) => {
+      if (!clientInfoSummary) return;
+      if (!client) {
+        clientInfoSummary.innerHTML = `
+          <div style="padding: 12px 14px; border: 1px solid #e6eaf0; border-radius: 10px; background: #f9fbfd;">
+            <strong>No client selected.</strong>
+            <div style="margin-top: 6px; color: #6b7280;">Choose a client from the list to view and schedule them.</div>
+          </div>
+        `;
+        return;
+      }
+
+      const savedState = isClientSaved(client);
+      clientInfoSummary.innerHTML = `
+        <div style="padding: 12px 14px; border: 1px solid #e6eaf0; border-radius: 10px; background: #f9fbfd; display: grid; gap: 8px;">
+          <div style="font-size: 1.05rem; font-weight: 700; color: #1f2937;">${client.name}</div>
+          <div style="color: #4b5563;">${client.company}</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; color: #6b7280; font-size: 0.95rem;">
+            <span>Phone: ${client.phone || 'Not provided'}</span>
+            <span>•</span>
+            <span>Email: ${client.email || 'Not provided'}</span>
+          </div>
+          <div style="color: #6b7280; font-size: 0.95rem;">Scheduled: ${client.dateRequested ? client.dateRequested : 'Not set'} ${client.timeRequested ? `at ${client.timeRequested}` : ''}</div>
+          <div style="font-size: 0.9rem; color: ${savedState ? '#1f9d55' : '#b57b00'}; font-weight: 700;">Status: ${savedState ? 'Saved client' : 'Not yet saved'}</div>
+        </div>
+      `;
+
+      if (deleteClientFromDashboardBtn) {
+        deleteClientFromDashboardBtn.disabled = !savedState;
+        deleteClientFromDashboardBtn.style.opacity = savedState ? '1' : '0.5';
+        deleteClientFromDashboardBtn.style.cursor = savedState ? 'pointer' : 'not-allowed';
+      }
+
+      if (clientScheduleDate) clientScheduleDate.value = client.dateRequested || '';
+      if (clientScheduleTime) clientScheduleTime.value = client.timeRequested || '';
+    };
+
+    const renderClientScheduleSelector = () => {
+      if (!clientScheduleClient) return;
+      const selectedClientId = activeClientForSchedule?.id || clientScheduleClient.value || '';
+      clientScheduleClient.innerHTML = '';
+
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Choose a client';
+      clientScheduleClient.appendChild(placeholder);
+
+      clients.forEach((client) => {
+        const option = document.createElement('option');
+        option.value = client.id;
+        option.textContent = `${client.name} • ${client.company}`;
+        if (selectedClientId === client.id) {
+          option.selected = true;
+        }
+        clientScheduleClient.appendChild(option);
+      });
+
+      if (!selectedClientId && clients.length) {
+        clientScheduleClient.value = clients[0].id;
+        activeClientForSchedule = clients[0];
+      }
+
+      const selectedClient = clients.find((client) => client.id === clientScheduleClient.value);
+      activeClientForSchedule = selectedClient || null;
+      updateClientSchedulePanel(selectedClient || null);
+    };
+
+    const saveClientSchedule = () => {
+      const selectedClient = clients.find((client) => client.id === clientScheduleClient?.value);
+      if (!selectedClient) {
+        searchResult.textContent = 'Select a client before setting a date and time.';
+        return;
+      }
+
+      selectedClient.dateRequested = clientScheduleDate?.value || '';
+      selectedClient.timeRequested = clientScheduleTime?.value || '';
+      upsertClientRecord(selectedClient);
+
+      upsertBookingForClient(selectedClient, {
+        schedule: buildScheduleFromClient(selectedClient).schedule,
+        dateRequested: selectedClient.dateRequested,
+        timeRequested: selectedClient.timeRequested,
+        status: 'Pending',
+      });
+
+      activeClientForSchedule = selectedClient;
+      renderClientScheduleSelector();
+      renderBookings();
+      refreshClientView();
+      searchResult.textContent = `Booking saved for ${selectedClient.name} on ${selectedClient.dateRequested || 'an agreed date'}.`;
+    };
+
+    const saveClientFromDashboard = () => {
+      const selectedClient = clients.find((client) => client.id === clientScheduleClient?.value);
+      if (!selectedClient) {
+        searchResult.textContent = 'Select a client before saving.';
+        return;
+      }
+
+      const alreadySaved = isClientSaved(selectedClient);
+      selectedClient.dateRequested = clientScheduleDate?.value || selectedClient.dateRequested || '';
+      selectedClient.timeRequested = clientScheduleTime?.value || selectedClient.timeRequested || '';
+
+      upsertClientRecord(selectedClient);
+      upsertBookingForClient(selectedClient, {
+        schedule: buildScheduleFromClient(selectedClient).schedule,
+        dateRequested: selectedClient.dateRequested,
+        timeRequested: selectedClient.timeRequested,
+        status: 'Pending',
+      });
+      renderClientScheduleSelector();
+      renderBookings();
+      refreshClientView();
+      searchResult.textContent = alreadySaved ? `${selectedClient.name} updated successfully.` : `${selectedClient.name} saved successfully.`;
+    };
+
+    const deleteClientFromDashboard = () => {
+      const selectedClient = clients.find((client) => client.id === clientScheduleClient?.value);
+      if (!selectedClient) {
+        searchResult.textContent = 'Select a client before deleting.';
+        return;
+      }
+
+      const confirmed = window.confirm(`Delete ${selectedClient.name} from the dashboard?`);
+      if (!confirmed) return;
+
+      clients = clients.filter((client) => client.id !== selectedClient.id);
+      bookings = bookings.filter((booking) => booking.client.toLowerCase() !== selectedClient.name.toLowerCase());
+      saveStoredClients(clients);
+      saveStoredBookings(bookings);
+      activeClientForSchedule = null;
+      renderClientScheduleSelector();
+      renderBookings();
+      refreshClientView();
+      searchResult.textContent = `${selectedClient.name} removed from the dashboard.`;
+    };
+
+    const renderClients = (items) => {
+      recentClients.innerHTML = '';
+      items.forEach((client) => {
+        const li = document.createElement('li');
+        li.className = 'client-item';
+        li.setAttribute('role', 'button');
+        li.setAttribute('tabindex', '0');
+        li.setAttribute('aria-label', `Open booking form for ${client.name}`);
+        li.innerHTML = `
+          <div class="client-avatar">${client.initial}</div>
+          <div>
+            <div class="client-name">${client.name}</div>
+            <div class="client-company">${client.company}</div>
+            <div class="client-date-text">Date: ${client.dateRequested || 'Not set'}${client.timeRequested ? ` • Time: ${client.timeRequested}` : ''}</div>
+          </div>
+          <div class="client-meta">
+            <span>${client.status}</span>
+            <div class="client-actions">
+              <button type="button" class="client-action-btn move" title="Move to Booking" aria-label="Move ${client.name} to booking">↪</button>
+              <button type="button" class="client-action-btn edit" title="Update Client" aria-label="Update ${client.name}">✎</button>
+              <button type="button" class="client-action-btn delete" title="Delete Client" aria-label="Delete ${client.name}">✕</button>
+            </div>
+          </div>
+        `;
+        const openForClient = () => {
+          activeClientForSchedule = client;
+          renderClientScheduleSelector();
+          openClientModal(client);
+        };
+        const editClient = (event) => {
+          event.stopPropagation();
+          openEditClientModal(client);
+        };
+        const moveClient = (event) => {
+          event.stopPropagation();
+          moveClientToBooking(client.id);
+        };
+        const deleteClient = (event) => {
+          event.stopPropagation();
+          removeClient(client.id);
+        };
+        li.addEventListener('click', openForClient);
+        li.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openForClient();
+          }
+        });
+        li.querySelector('.move').addEventListener('click', moveClient);
+        li.querySelector('.edit').addEventListener('click', editClient);
+        li.querySelector('.delete').addEventListener('click', deleteClient);
+        recentClients.appendChild(li);
+      });
+      document.getElementById('clientCount').textContent = items.length;
+    };
+
+    const findClientByName = (name) => clients.find((client) => client.name.toLowerCase() === name.toLowerCase());
+
+    const findBookingByClient = (name, dateRequested = '', timeRequested = '') => bookings.find((booking) => {
+      const matchesClient = booking.client && booking.client.toLowerCase() === name.toLowerCase();
+      const matchesDate = !dateRequested || booking.dateRequested === dateRequested;
+      const matchesTime = !timeRequested || booking.timeRequested === timeRequested;
+      return matchesClient && matchesDate && matchesTime;
+    });
+
+    const parseSchedule = (scheduleText = '') => {
+      const parts = scheduleText.split(',').map((part) => part.trim()).filter(Boolean);
+      return {
+        dayLabel: parts[0] || '',
+        timeLabel: parts.slice(1).join(', ') || '',
+      };
+    };
+
+    const resolveCalendarDate = (record, fallbackClient = null) => {
+      if (record?.dateRequested) {
+        const parsedDate = new Date(`${record.dateRequested}T00:00:00`);
+        if (!Number.isNaN(parsedDate.getTime())) {
+          return parsedDate;
+        }
+      }
+
+      const scheduleText = record?.schedule || '';
+      const dayLabel = parseSchedule(scheduleText).dayLabel.toLowerCase();
+      const weekdayMap = {
+        mon: 0,
+        tue: 1,
+        wed: 2,
+        thu: 3,
+        fri: 4,
+        sat: 5,
+        sun: 6,
+      };
+      const weekdayIndex = weekdayMap[dayLabel];
+
+      if (typeof weekdayIndex === 'number') {
+        const today = new Date();
+        const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+        const firstDayOffset = (monthStart.getDay() + 6) % 7;
+        const dayNumber = ((weekdayIndex - firstDayOffset + 7) % 7) + 1;
+        return new Date(today.getFullYear(), today.getMonth(), dayNumber);
+      }
+
+      if (fallbackClient?.dateRequested) {
+        const parsedDate = new Date(`${fallbackClient.dateRequested}T00:00:00`);
+        if (!Number.isNaN(parsedDate.getTime())) {
+          return parsedDate;
+        }
+      }
+
+      return null;
+    };
+
+    const buildScheduleFromClient = (client) => {
+      if (client.dateRequested) {
+        const requestedDate = new Date(`${client.dateRequested}T00:00:00`);
+        if (!Number.isNaN(requestedDate.getTime())) {
+          const dayLabel = new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(requestedDate);
+          const dateLabel = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(requestedDate);
+          const timeLabel = client.timeRequested || 'Time not set';
+          return {
+            schedule: `${dateLabel}, ${timeLabel}`,
+            dateRequested: client.dateRequested,
+            timeRequested: client.timeRequested || '',
+            dateLabel,
+          };
+        }
+      }
+
+      return {
+        schedule: `Scheduled, ${client.timeRequested || 'Time not set'}`,
+        dateRequested: client.dateRequested || '',
+        timeRequested: client.timeRequested || '',
+        dateLabel: '',
+      };
+    };
+
+    const getNextScheduledBooking = () => {
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+
+      return bookings
+        .filter((booking) => booking.dateRequested)
+        .map((booking) => {
+          const [year, month, day] = booking.dateRequested.split('-').map(Number);
+          const [hour = '0', minute = '0'] = (booking.timeRequested || '00:00').split(':');
+          const scheduledAt = new Date(year, month - 1, day, Number(hour), Number(minute));
+          return { ...booking, scheduledAt };
+        })
+        .filter((booking) => booking.scheduledAt >= todayStart)
+        .sort((a, b) => a.scheduledAt - b.scheduledAt)[0] || null;
+    };
+
+    const renderNextScheduleNotice = () => {
+      const notice = document.getElementById('nextScheduleNotice');
+      if (!notice) return;
+
+      const nextBooking = getNextScheduledBooking();
+      if (!nextBooking) {
+        notice.textContent = 'No upcoming schedule yet.';
+        notice.classList.remove('has-data');
+        return;
+      }
+
+      const dateLabel = new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+      }).format(nextBooking.scheduledAt);
+      const timeLabel = nextBooking.timeRequested ? ` at ${nextBooking.timeRequested}` : '';
+      notice.innerHTML = `Next scheduled: <strong>${nextBooking.client}</strong> on ${dateLabel}${timeLabel}.`;
+      notice.classList.add('has-data');
+    };
+
+    const updateBookingSchedule = (bookingId, dateRequested, timeRequested) => {
+      const targetBooking = bookings.find((booking) => booking.id === bookingId);
+      if (!targetBooking) return;
+
+      targetBooking.dateRequested = dateRequested || '';
+      targetBooking.timeRequested = timeRequested || '';
+      const scheduleData = buildScheduleFromClient({
+        dateRequested: targetBooking.dateRequested,
+        timeRequested: targetBooking.timeRequested,
+      });
+      targetBooking.schedule = scheduleData.schedule;
+
+      saveStoredBookings(bookings);
+      renderBookings();
+      renderScheduleCalendar();
+      searchResult.textContent = `Schedule updated for ${targetBooking.client}.`;
+    };
+
+    const upsertBookingForClient = (client, overrides = {}) => {
+      const scheduleData = buildScheduleFromClient(client);
+      const existingBooking = bookings.find((booking) => booking.client.toLowerCase() === client.name.toLowerCase());
+      const bookingRecord = {
+        id: existingBooking ? existingBooking.id : createClientId(),
+        client: client.name,
+        schedule: overrides.schedule || scheduleData.schedule,
+        status: overrides.status || (existingBooking ? existingBooking.status : 'Pending'),
+        company: client.company,
+        dateRequested: overrides.dateRequested ?? client.dateRequested ?? scheduleData.dateRequested,
+        timeRequested: overrides.timeRequested ?? client.timeRequested ?? scheduleData.timeRequested,
+        purpose: client.purpose,
+        facility: client.facility,
+        participants: client.participants,
+        notes: client.notes,
+      };
+
+      if (existingBooking) {
+        bookings = bookings.map((booking) => (booking.id === existingBooking.id ? { ...booking, ...bookingRecord } : booking));
+      } else {
+        bookings.unshift(normalizeBooking(bookingRecord));
+      }
+
+      saveStoredBookings(bookings);
+      return bookings.find((booking) => booking.id === bookingRecord.id) || null;
+    };
+
+    const moveClientToBooking = (clientId) => {
+      const targetClient = clients.find((client) => client.id === clientId);
+      if (!targetClient) return;
+
+      const scheduleData = buildScheduleFromClient(targetClient);
+      upsertBookingForClient(targetClient, {
+        schedule: scheduleData.schedule,
+        dateRequested: scheduleData.dateRequested,
+        timeRequested: scheduleData.timeRequested,
+        status: 'Pending',
+      });
+
+      saveStoredClients(clients);
+      refreshClientView();
+      renderBookings();
+      renderScheduleCalendar();
+      searchResult.textContent = `${targetClient.name} copied to bookings and remains in clients.`;
+    };
+
+    const moveBookingToClient = (bookingId) => {
+      const targetBooking = bookings.find((booking) => booking.id === bookingId);
+      if (!targetBooking) return;
+
+      const parsedSchedule = parseSchedule(targetBooking.schedule);
+      const dateFromBooking = targetBooking.dateRequested || '';
+      const existingClient = findClientByName(targetBooking.client);
+      const clientRecord = {
+        id: existingClient ? existingClient.id : createClientId(),
+        name: targetBooking.client,
+        company: targetBooking.company || (existingClient ? existingClient.company : 'No organization'),
+        status: 'Recently',
+        initial: targetBooking.client.trim().charAt(0).toUpperCase() || 'C',
+        email: existingClient ? existingClient.email : `${targetBooking.client.toLowerCase().replace(/\s+/g, '.')}@client.com`,
+        phone: existingClient ? existingClient.phone : '',
+        dateRequested: dateFromBooking,
+        timeRequested: targetBooking.timeRequested || parsedSchedule.timeLabel || '',
+        purpose: targetBooking.purpose || (existingClient ? existingClient.purpose : ''),
+        facility: targetBooking.facility || (existingClient ? existingClient.facility : ''),
+        participants: targetBooking.participants || (existingClient ? existingClient.participants : ''),
+        notes: targetBooking.notes || (existingClient ? existingClient.notes : ''),
+      };
+
+      const normalizedClient = normalizeClient(clientRecord);
+      if (existingClient) {
+        clients = clients.map((client) => (client.id === existingClient.id ? { ...client, ...normalizedClient } : client));
+      } else {
+        clients = [...clients, normalizedClient];
+      }
+      bookings = bookings.filter((booking) => booking.id !== bookingId);
+      saveStoredClients(clients);
+      saveStoredBookings(bookings);
+      refreshClientView();
+      renderBookings();
+      renderScheduleCalendar();
+      searchResult.textContent = `${targetBooking.client} moved back to clients.`;
+    };
+
+    const renderScheduleCalendar = () => {
+      if (!scheduleCalendar) return;
+
+      scheduleCalendar.style.display = 'grid';
+      scheduleCalendar.style.gridTemplateColumns = 'repeat(7, minmax(0, 1fr))';
+      scheduleCalendar.style.gridAutoRows = 'minmax(128px, auto)';
+      scheduleCalendar.style.alignItems = 'start';
+      scheduleCalendar.style.gap = '10px';
+      scheduleCalendar.style.width = '100%';
+      scheduleCalendar.style.padding = '0';
+      scheduleCalendar.style.fontSize = '1rem';
+
+      const calendarScroll = scheduleCalendar.parentElement;
+      if (calendarScroll) {
+        calendarScroll.style.overflowX = 'auto';
+        calendarScroll.style.overflowY = 'hidden';
+        calendarScroll.style.width = '100%';
+      }
+
+      const today = new Date();
+      const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+      const monthDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+      const firstDayOffset = (monthStart.getDay() + 6) % 7;
+      const monthLabel = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(today);
+
+      const dayBuckets = Array.from({ length: monthDays }, () => []);
+
+      const addToBucket = (record, date, fallbackSubtitle, fallbackTime, fallbackStatus) => {
+        const dayIndex = date.getDate() - 1;
+        if (dayIndex < 0 || dayIndex >= monthDays) return;
+
+        dayBuckets[dayIndex].push({
+          name: record.name,
+          subtitle: [record.company, record.purpose].filter(Boolean).join(' • ') || fallbackSubtitle,
+          timeLabel: record.timeRequested || fallbackTime || 'Time not set',
+          dateLabel: new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(date),
+          status: record.status || fallbackStatus || 'Recently',
+        });
+      };
+
+      clients.forEach((client) => {
+        const scheduledDate = resolveCalendarDate(client, client);
+        if (!scheduledDate) return;
+        if (scheduledDate.getMonth() !== today.getMonth() || scheduledDate.getFullYear() !== today.getFullYear()) return;
+
+        addToBucket(client, scheduledDate, 'Scheduled client', 'Time not set', 'Recently');
+      });
+
+      bookings.forEach((booking) => {
+        const matchedClient = findClientByName(booking.client);
+        const scheduledDate = resolveCalendarDate(booking, matchedClient);
+        if (!scheduledDate) return;
+        if (scheduledDate.getMonth() !== today.getMonth() || scheduledDate.getFullYear() !== today.getFullYear()) return;
+
+        dayBuckets[scheduledDate.getDate() - 1].push({
+          name: booking.client,
+          subtitle: matchedClient ? [matchedClient.company, matchedClient.purpose].filter(Boolean).join(' • ') || 'Scheduled client' : 'Client booking',
+          timeLabel: booking.timeRequested || matchedClient?.timeRequested || 'Time not set',
+          dateLabel: new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(scheduledDate),
+          status: booking.status,
+        });
+      });
+
+      const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const cells = [];
+      const totalCells = Math.ceil((firstDayOffset + monthDays) / 7) * 7;
+
+      for (let cellIndex = 0; cellIndex < totalCells; cellIndex += 1) {
+        const day = cellIndex - firstDayOffset + 1;
+        if (day < 1 || day > monthDays) {
+          cells.push('<div class="calendar-day empty" aria-hidden="true"></div>');
+          continue;
+        }
+
+        const date = new Date(today.getFullYear(), today.getMonth(), day);
+        const isToday = date.toDateString() === today.toDateString();
+        const events = dayBuckets[day - 1];
+        const dayName = dayNames[(date.getDay() + 6) % 7];
+        const visibleEvents = events.slice(0, 3);
+        const moreCount = events.length - visibleEvents.length;
+
+        cells.push(`
+          <div class="calendar-day ${isToday ? 'today' : ''}${events.length ? '' : ' empty'}">
+            <div class="calendar-day-label"><span>${dayName}</span><span class="calendar-date">${day}</span></div>
+            ${events.length ? `
+              <div class="calendar-events">
+                ${visibleEvents.map((event) => `
+                  <div class="calendar-event">
+                    <div class="calendar-event-title">${event.name}</div>
+                    <div class="calendar-event-meta">${event.dateLabel ? `${event.dateLabel} · ` : ''}${event.timeLabel}</div>
+                  </div>
+                `).join('')}
+                ${moreCount > 0 ? `<div class="calendar-event-meta">+${moreCount} more</div>` : ''}
+              </div>
+            ` : '<div class="calendar-note">No client bookings</div>'}
+          </div>
+        `);
+      }
+
+      scheduleCalendar.innerHTML = cells.join('');
+
+      const calendarHeader = scheduleCalendar.parentElement?.previousElementSibling?.querySelector('.calendar-pill');
+      if (calendarHeader) {
+        calendarHeader.textContent = monthLabel;
+      }
+    };
+
+    const updateBookingStatus = (bookingId, nextStatus) => {
+      bookings = bookings.map((booking) => (booking.id === bookingId ? { ...booking, status: nextStatus } : booking));
+      saveStoredBookings(bookings);
+      renderBookings();
+      renderScheduleCalendar();
+      searchResult.textContent = `Booking status updated to ${nextStatus}.`;
+    };
+
+    const openClientModal = (client = null) => {
+      activeClientId = client && client.id ? client.id : null;
+      saveClientBtn.textContent = activeClientId ? 'Update Client' : 'Add New Client';
+      clientModal.style.display = 'block';
+      clientModal.setAttribute('aria-hidden', 'false');
+      const nameParts = client ? client.name.split(' ') : [];
+      document.getElementById('clientFirstName').value = client ? nameParts.shift() || '' : '';
+      document.getElementById('clientLastName').value = client ? nameParts.join(' ') : '';
+      document.getElementById('clientEmail').value = client ? `${client.name.toLowerCase().replace(/\s+/g, '.')}@client.com` : '';
+      document.getElementById('clientPhone').value = '';
+      document.getElementById('clientInstitution').value = client ? client.company : '';
+      document.getElementById('clientDateRequested').value = '';
+      document.getElementById('clientTimeRequested').value = '';
+      document.getElementById('clientPurpose').value = '';
+      document.getElementById('clientFacility').value = '';
+      document.getElementById('clientParticipants').value = '';
+      document.getElementById('clientNotes').value = client ? `Opened from ${client.name}'s client card.` : '';
+    };
+
+    const fillAddClientForm = (client = null) => {
+      const nameParts = client ? client.name.split(' ') : [];
+      addClientFirstName.value = client ? nameParts.shift() || '' : '';
+      addClientLastName.value = client ? nameParts.join(' ') : '';
+      addClientEmail.value = client ? client.email || `${client.name.toLowerCase().replace(/\s+/g, '.')}@client.com` : '';
+      addClientPhone.value = client ? client.phone || '' : '';
+      addClientInstitution.value = client ? client.company || '' : '';
+      addClientDateRequested.value = client ? client.dateRequested || '' : '';
+      addClientTimeRequested.value = client ? client.timeRequested || '' : '';
+      addClientPurpose.value = client ? client.purpose || '' : '';
+      addClientFacility.value = client ? client.facility || '' : '';
+      addClientParticipants.value = client ? client.participants || '' : '';
+      addClientNotes.value = client ? client.notes || '' : '';
+    };
+
+    const setAddClientMode = (mode, client = null) => {
+      const isEditMode = mode === 'edit';
+      editingClientId = isEditMode && client ? client.id : null;
+      addClientTitle.textContent = isEditMode ? 'Update Client' : 'Add New Client';
+      saveAddClientBtn.textContent = isEditMode ? 'Update Client' : 'Add New Client';
+    };
+
+    const openAddClientModal = () => {
+      setAddClientMode('create');
+      addClientPanel.style.display = 'block';
+      addClientPanel.setAttribute('aria-hidden', 'false');
+      addClientForm.reset();
+      addClientFirstName.focus();
+    };
+
+    const openEditClientModal = (client) => {
+      setAddClientMode('edit', client);
+      addClientPanel.style.display = 'block';
+      addClientPanel.setAttribute('aria-hidden', 'false');
+      fillAddClientForm(client);
+      addClientFirstName.focus();
+    };
+
+    const closeAddClientModal = () => {
+      addClientPanel.style.display = 'none';
+      addClientPanel.setAttribute('aria-hidden', 'true');
+      setAddClientMode('create');
+      addClientForm.reset();
+    };
+
+    const removeClient = (clientId) => {
+      const target = clients.find((client) => client.id === clientId);
+      if (!target) return;
+      const confirmed = window.confirm(`Delete ${target.name}?`);
+      if (!confirmed) return;
+
+      clients = clients.filter((client) => client.id !== clientId);
+      saveStoredClients(clients);
+      refreshClientView();
+      searchResult.textContent = `${target.name} deleted.`;
+
+      if (editingClientId === clientId) {
+        closeAddClientModal();
+      }
+    };
+
+    const buildCopyText = () => {
+      const fields = [
+        ['First Name', document.getElementById('clientFirstName').value.trim()],
+        ['Last Name', document.getElementById('clientLastName').value.trim()],
+        ['Email Address', document.getElementById('clientEmail').value.trim()],
+        ['Phone Number', document.getElementById('clientPhone').value.trim()],
+        ['Institution / Organization', document.getElementById('clientInstitution').value.trim()],
+        ['Date Requested', document.getElementById('clientDateRequested').value.trim()],
+        ['Time Requested', document.getElementById('clientTimeRequested').value.trim()],
+        ['Purpose of Request', document.getElementById('clientPurpose').value.trim()],
+        ['Equipment or Facility Needed', document.getElementById('clientFacility').value.trim()],
+        ['Number of Participants', document.getElementById('clientParticipants').value.trim()],
+        ['Special Requests / Additional Information', document.getElementById('clientNotes').value.trim()],
+      ];
+
+      return fields
+        .filter(([, value]) => value)
+        .map(([label, value]) => `${label}: ${value}`)
+        .join('\n');
+    };
+
+    const copyBookingDetails = async () => {
+      const text = buildCopyText();
+      if (!text) {
+        searchResult.textContent = 'Nothing to copy yet. Open a client or mail first.';
+        return;
+      }
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const temp = document.createElement('textarea');
+          temp.value = text;
+          temp.setAttribute('readonly', 'true');
+          temp.style.position = 'absolute';
+          temp.style.left = '-9999px';
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+        }
+        searchResult.textContent = 'Booking details copied to clipboard.';
+      } catch (error) {
+        console.error('Copy failed:', error);
+        searchResult.textContent = 'Copy failed. You can still select and copy the fields manually.';
+      }
+    };
+
+    const buildAddClientCopyText = () => {
+      const fields = [
+        ['First Name', addClientFirstName.value.trim()],
+        ['Last Name', addClientLastName.value.trim()],
+        ['Email Address', addClientEmail.value.trim()],
+        ['Phone Number', addClientPhone.value.trim()],
+        ['Institution / Organization', addClientInstitution.value.trim()],
+        ['Date Requested', addClientDateRequested.value.trim()],
+        ['Time Requested', addClientTimeRequested.value.trim()],
+        ['Purpose of Request', addClientPurpose.value.trim()],
+        ['Equipment or Facility Needed', addClientFacility.value.trim()],
+        ['Number of Participants', addClientParticipants.value.trim()],
+        ['Special Requests / Additional Information', addClientNotes.value.trim()],
+      ];
+
+      return fields
+        .filter(([, value]) => value)
+        .map(([label, value]) => `${label}: ${value}`)
+        .join('\n');
+    };
+
+    const copyAddClientDetails = async () => {
+      const text = buildAddClientCopyText();
+      if (!text) {
+        searchResult.textContent = 'Nothing to copy yet.';
+        return;
+      }
+
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const temp = document.createElement('textarea');
+          temp.value = text;
+          temp.setAttribute('readonly', 'true');
+          temp.style.position = 'absolute';
+          temp.style.left = '-9999px';
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+        }
+        searchResult.textContent = 'Add client details copied to clipboard.';
+      } catch (error) {
+        console.error('Copy failed:', error);
+        searchResult.textContent = 'Copy failed. You can still select and copy the fields manually.';
+      }
+    };
+
+    const parseKeyValueLines = (text) => {
+      const values = {};
+      text.split(/\r?\n/).forEach((line) => {
+        const separatorIndex = line.indexOf(':');
+        if (separatorIndex === -1) return;
+        const key = line.slice(0, separatorIndex).trim().toLowerCase();
+        const value = line.slice(separatorIndex + 1).trim();
+        if (key && value) {
+          values[key] = value;
+        }
+      });
+      return values;
+    };
+
+    const applyPastedDetails = (rawText) => {
+      const values = parseKeyValueLines(rawText);
+
+      const fieldMap = {
+        'first name': 'clientFirstName',
+        'last name': 'clientLastName',
+        'email address': 'clientEmail',
+        'phone number': 'clientPhone',
+        'institution / organization': 'clientInstitution',
+        'date requested': 'clientDateRequested',
+        'time requested': 'clientTimeRequested',
+        'purpose of request': 'clientPurpose',
+        'equipment or facility needed': 'clientFacility',
+        'number of participants': 'clientParticipants',
+        'special requests / additional information': 'clientNotes',
+      };
+
+      Object.entries(fieldMap).forEach(([label, fieldId]) => {
+        if (values[label]) {
+          document.getElementById(fieldId).value = values[label];
+        }
+      });
+
+      searchResult.textContent = 'Pasted details into the booking form.';
+    };
+
+    const applyPastedAddClientDetails = (rawText) => {
+      const values = parseKeyValueLines(rawText);
+
+      const fieldMap = {
+        'first name': 'addClientFirstName',
+        'last name': 'addClientLastName',
+        'email address': 'addClientEmail',
+        'phone number': 'addClientPhone',
+        'institution / organization': 'addClientInstitution',
+        'date requested': 'addClientDateRequested',
+        'time requested': 'addClientTimeRequested',
+        'purpose of request': 'addClientPurpose',
+        'equipment or facility needed': 'addClientFacility',
+        'number of participants': 'addClientParticipants',
+        'special requests / additional information': 'addClientNotes',
+      };
+
+      Object.entries(fieldMap).forEach(([label, fieldId]) => {
+        if (values[label]) {
+          document.getElementById(fieldId).value = values[label];
+        }
+      });
+
+      searchResult.textContent = 'Pasted details into the add client form.';
+    };
+
+    const pasteBookingDetails = async () => {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          const rawText = await navigator.clipboard.readText();
+          if (!rawText.trim()) {
+            searchResult.textContent = 'Clipboard is empty.';
+            return;
+          }
+          applyPastedDetails(rawText);
+          return;
+        }
+
+        const manualText = window.prompt('Paste booking details in "Label: Value" lines.');
+        if (manualText && manualText.trim()) {
+          applyPastedDetails(manualText);
+        }
+      } catch (error) {
+        console.error('Paste failed:', error);
+        searchResult.textContent = 'Paste failed. Please use the browser clipboard prompt or type manually.';
+      }
+    };
+
+    const pasteAddClientDetails = async () => {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          const rawText = await navigator.clipboard.readText();
+          if (!rawText.trim()) {
+            searchResult.textContent = 'Clipboard is empty.';
+            return;
+          }
+          applyPastedAddClientDetails(rawText);
+          return;
+        }
+
+        const manualText = window.prompt('Paste add client details in "Label: Value" lines.');
+        if (manualText && manualText.trim()) {
+          applyPastedAddClientDetails(manualText);
+        }
+      } catch (error) {
+        console.error('Paste failed:', error);
+        searchResult.textContent = 'Paste failed. Please use the browser clipboard prompt or type manually.';
+      }
+    };
+
+    const parseMailBody = (bodyText = '') => {
+      const values = parseKeyValueLines(bodyText);
+      return {
+        firstName: values['first name'] || '',
+        lastName: values['last name'] || '',
+        email: values['email address'] || values['email'] || '',
+        phone: values['phone number'] || values['phone'] || '',
+        institution: values['institution / organization'] || values['institution'] || '',
+        dateRequested: values['date requested'] || '',
+        timeRequested: values['time requested'] || '',
+        purpose: values['purpose of request'] || values['purpose'] || '',
+        facility: values['equipment or facility needed'] || values['equipment / facility'] || '',
+        participants: values['number of participants'] || values['participants'] || '',
+        requests: values['special requests / additional information'] || values['special requests'] || '',
+      };
+    };
+
+    const buildClientFromMail = (mail) => {
+      const parsed = parseMailBody(mail.body || '');
+      const senderName = (parsed.firstName || mail.sender.split('@')[0].replace(/[._-]+/g, ' ')).trim();
+      const nameParts = senderName.split(' ').filter(Boolean);
+      const firstName = parsed.firstName || nameParts.shift() || '';
+      const lastName = parsed.lastName || nameParts.join(' ');
+
+      return {
+        id: createClientId(),
+        name: `${firstName} ${lastName}`.trim() || mail.sender,
+        company: parsed.institution || 'No organization',
+        status: 'Active',
+        initial: (firstName.charAt(0) || mail.sender.charAt(0) || 'C').toUpperCase(),
+        email: parsed.email || mail.sender,
+        phone: parsed.phone || '',
+        dateRequested: parsed.dateRequested || '',
+        timeRequested: parsed.timeRequested || '',
+        purpose: parsed.purpose || mail.subject || '',
+        facility: parsed.facility || '',
+        participants: parsed.participants || '',
+        notes: [
+          `Accepted from mail: ${mail.subject || 'Mail'}`,
+          parsed.requests ? `Requests: ${parsed.requests}` : '',
+          mail.receivedAt ? `Received: ${new Date(mail.receivedAt).toLocaleDateString()}` : ''
+        ].filter(Boolean).join('\n'),
+      };
+    };
+
+    const upsertClientFromMail = (mail) => {
+      const clientRecord = normalizeClient(buildClientFromMail(mail));
+      const existingIndex = clients.findIndex((client) =>
+        client.email.toLowerCase() === clientRecord.email.toLowerCase() ||
+        client.name.toLowerCase() === clientRecord.name.toLowerCase()
+      );
+
+      if (existingIndex === -1) {
+        upsertClientRecord(clientRecord);
+      } else {
+        clients = clients.map((client, index) => (index === existingIndex ? { ...client, ...clientRecord } : client));
+        saveStoredClients(clients);
+      }
+
+      refreshClientView();
+      refreshClientView();
+    };
+
+    const sendDecisionToSenderNumber = async (mail, decision, senderNumber, customMessage) => {
+      const outboxKey = 'sms_outbox';
+      const message = customMessage || `Booking ${decision.toLowerCase()} for ${mail.subject || 'your request'}.`;
+
+      const response = await fetch(`${smsApiBase}/api/sms/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: senderNumber,
+          message,
+        }),
+      });
+
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok || !payload.success) {
+        throw new Error(payload.error || payload.message || 'Failed to send SMS');
+      }
+
+      const outboxRaw = localStorage.getItem(outboxKey);
+      const outbox = outboxRaw ? JSON.parse(outboxRaw) : [];
+      outbox.unshift({
+        id: Date.now(),
+        to: senderNumber,
+        message,
+        relatedSender: mail.sender || '',
+        relatedSubject: mail.subject || '',
+        createdAt: new Date().toISOString(),
+        status: 'Sent',
+      });
+      localStorage.setItem(outboxKey, JSON.stringify(outbox));
+      return message;
+    };
+
+    const openMailModal = (mail) => {
+      activeMailRecord = mail;
+      markMailAsRead(mail);
+      const parsed = parseMailBody(mail.body || '');
+      const receivedDate = mail.receivedAt ? new Date(mail.receivedAt).toLocaleDateString() : 'Just now';
+      const decision = mail.bookingDecision || 'Pending';
+      const senderNumber = parsed.phone || 'Not provided';
+
+      const detailItems = [
+        ['Sender', mail.sender || ''],
+        ['Subject', mail.subject || ''],
+        ['Status', mail.status || 'Received'],
+        ['Booking Decision', decision],
+        ['Sender Number', senderNumber],
+        ['Received', receivedDate],
+        ['First Name', parsed.firstName],
+        ['Last Name', parsed.lastName],
+        ['Email Address', parsed.email || mail.sender || ''],
+        ['Phone Number', parsed.phone],
+        ['Institution / Organization', parsed.institution],
+        ['Date Requested', parsed.dateRequested],
+        ['Time Requested', parsed.timeRequested],
+        ['Purpose of Request', parsed.purpose || mail.subject || ''],
+        ['Equipment or Facility Needed', parsed.facility],
+        ['Number of Participants', parsed.participants],
+        ['Special Requests / Additional Information', parsed.requests],
+      ];
+
+      mailDetailList.innerHTML = detailItems.map(([label, value]) => `
+        <div class="detail-item ${label === 'Special Requests / Additional Information' ? 'full' : ''}">
+          <span class="detail-label">${label}</span>
+          <div class="detail-value">${value || 'Not provided'}</div>
+        </div>
+      `).join('');
+
+      mailModal.style.display = 'block';
+      mailModal.setAttribute('aria-hidden', 'false');
+    };
+
+    const closeMailModalFn = () => {
+      mailModal.style.display = 'none';
+      mailModal.setAttribute('aria-hidden', 'true');
+    };
+
+    const getBookingPhoneNumber = () => {
+      const phoneInput = document.getElementById('clientPhone');
+      const formPhone = phoneInput ? phoneInput.value.trim() : '';
+      if (formPhone) {
+        return formPhone;
+      }
+
+      return parseMailBody(activeMailRecord?.body || '').phone || '';
+    };
+
+    const saveMailDecision = async (decision) => {
+      if (!activeMailRecord) return;
+
+      const isDeclined = decision === 'Declined';
+      const isAccepted = decision === 'Accepted';
+      const senderLabel = activeMailRecord.sender || 'the sender';
+      const senderNumber = getBookingPhoneNumber();
+
+      const storedMailRaw = localStorage.getItem(mailboxKey);
+      const storedMail = storedMailRaw ? JSON.parse(storedMailRaw) : [];
+      const matchIndex = storedMail.findIndex((mail) =>
+        mail.sender === activeMailRecord.sender &&
+        mail.subject === activeMailRecord.subject &&
+        mail.receivedAt === activeMailRecord.receivedAt
+      );
+
+      const nextStatus = decision === 'Accepted' ? 'Booking Accepted' : 'Booking Declined';
+      const mailToUpdate = storedMail[matchIndex] ? { ...storedMail[matchIndex] } : { ...activeMailRecord };
+      mailToUpdate.bookingDecision = decision;
+      mailToUpdate.status = nextStatus;
+
+      if (matchIndex === -1) {
+        searchResult.textContent = 'Mail item could not be found in storage.';
+        return;
+      }
+
+      if (senderNumber) {
+        try {
+          await sendDecisionToSenderNumber(
+            mailToUpdate,
+            decision,
+            senderNumber,
+            isDeclined ? 'Your booking is declined.' : isAccepted ? 'Your booking is accepted.' : undefined
+          );
+        } catch (error) {
+          console.error('SMS send failed:', error);
+          searchResult.textContent = `Decision saved, but SMS could not be sent to ${senderNumber}: ${error.message}`;
+        }
+      }
+
+      if (isAccepted) {
+        upsertClientFromMail(mailToUpdate);
+      }
+
+      if (isDeclined || isAccepted) {
+        storedMail.splice(matchIndex, 1);
+      } else {
+        storedMail[matchIndex] = mailToUpdate;
+      }
+
+      localStorage.setItem(mailboxKey, JSON.stringify(storedMail));
+
+      activeMailRecord = mailToUpdate;
+
+      renderMailRows();
+      if (isDeclined || isAccepted) {
+        closeMailModalFn();
+        activeMailRecord = null;
+      } else {
+        openMailModal(activeMailRecord);
+      }
+      if (senderNumber) {
+        searchResult.textContent = isDeclined
+          ? `Booking declined for ${senderLabel}; mail deleted and message sent to ${senderNumber}.`
+          : `Booking accepted for ${senderLabel}; mail deleted and message sent to ${senderNumber}.`;
+      } else {
+        searchResult.textContent = isDeclined
+          ? `Booking declined for ${senderLabel}; mail deleted, but no sender number was available.`
+          : `Booking accepted for ${senderLabel}; mail deleted, but no sender number was available.`;
+      }
+    };
+
+    const openBookingFromMail = () => {
+      if (!activeMailRecord) return;
+
+      const parsed = parseMailBody(activeMailRecord.body || '');
+      const senderName = (parsed.firstName || activeMailRecord.sender.split('@')[0].replace(/[._-]+/g, ' ')).trim();
+      const nameParts = senderName.split(' ');
+
+      closeMailModalFn();
+      openClientModal({
+        name: `${nameParts.shift() || ''} ${nameParts.join(' ')}`.trim() || activeMailRecord.sender,
+        company: parsed.institution || 'No organization',
+        status: 'Recently',
+        initial: (parsed.firstName || activeMailRecord.sender.charAt(0) || 'C').toUpperCase(),
+      });
+
+      document.getElementById('clientFirstName').value = parsed.firstName || nameParts.shift() || '';
+      document.getElementById('clientLastName').value = parsed.lastName || nameParts.join(' ');
+      document.getElementById('clientEmail').value = parsed.email || activeMailRecord.sender;
+      document.getElementById('clientPhone').value = parsed.phone || '';
+      document.getElementById('clientInstitution').value = parsed.institution || '';
+      document.getElementById('clientDateRequested').value = parsed.dateRequested || '';
+      document.getElementById('clientTimeRequested').value = parsed.timeRequested || '';
+      document.getElementById('clientPurpose').value = parsed.purpose || activeMailRecord.subject || '';
+      document.getElementById('clientFacility').value = parsed.facility || '';
+      document.getElementById('clientParticipants').value = parsed.participants || '';
+      document.getElementById('clientNotes').value = [
+        `Opened from mail: ${activeMailRecord.subject || 'Mail'}`,
+        parsed.requests ? `Requests: ${parsed.requests}` : '',
+        activeMailRecord.receivedAt ? `Received: ${new Date(activeMailRecord.receivedAt).toLocaleDateString()}` : ''
+      ].filter(Boolean).join('\n');
+    };
+
+    const closeClientModalFn = () => {
+      clientModal.style.display = 'none';
+      clientModal.setAttribute('aria-hidden', 'true');
+      activeClientId = null;
+      saveClientBtn.textContent = 'Add New Client';
+    };
+
+    const clearAddClientForm = () => {
+      addClientForm.reset();
+      setAddClientMode(null);
+      addClientFirstName.focus();
+    };
+
+    const setActiveMenu = (targetId) => {
+      menuButtons.forEach((button) => {
+        button.classList.toggle('active', button.dataset.target === targetId);
+      });
+    };
+
+    const setVisibleSection = (targetId) => {
+      const sections = Array.from(document.querySelectorAll('.cms-section'));
+      sections.forEach((section) => {
+        section.classList.toggle('visible', section.id === targetId);
+      });
+    };
+
+    const scrollToSection = (targetId) => {
+      const section = document.getElementById(targetId);
+      if (!section) return;
+
+      setVisibleSection(targetId);
+      setActiveMenu(targetId);
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    const renderBookings = () => {
+      renderNextScheduleNotice();
+      bookingRows.innerHTML = '';
+      bookings.forEach((booking) => {
+        const tr = document.createElement('tr');
+        const statusClass = booking.status === 'Confirmed' ? 'ok' : booking.status === 'Pending' ? 'wait' : 'fail';
+        tr.innerHTML = `
+          <td>${booking.client}</td>
+          <td>
+            <div class="schedule-edit-group">
+              <input type="date" class="schedule-date-input" value="${booking.dateRequested || ''}" aria-label="Change date for ${booking.client}">
+              <input type="time" class="schedule-time-input" value="${booking.timeRequested || ''}" aria-label="Change time for ${booking.client}">
+            </div>
+          </td>
+          <td>
+            <select class="booking-status-select ${statusClass}" aria-label="Edit booking status for ${booking.client}">
+              <option value="Confirmed">Confirmed</option>
+              <option value="Pending">Pending</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </td>
+          <td>
+            <button type="button" class="booking-action-btn move" title="Move to Client" aria-label="Move ${booking.client} back to clients">↩</button>
+          </td>
+        `;
+        const statusSelect = tr.querySelector('.booking-status-select');
+        const moveBookingButton = tr.querySelector('.booking-action-btn.move');
+        const scheduleDateInput = tr.querySelector('.schedule-date-input');
+        const scheduleTimeInput = tr.querySelector('.schedule-time-input');
+        statusSelect.value = booking.status;
+        statusSelect.addEventListener('click', (event) => event.stopPropagation());
+        statusSelect.addEventListener('change', () => updateBookingStatus(booking.id, statusSelect.value));
+        scheduleDateInput.addEventListener('click', (event) => event.stopPropagation());
+        scheduleDateInput.addEventListener('change', () => updateBookingSchedule(booking.id, scheduleDateInput.value, scheduleTimeInput.value));
+        scheduleTimeInput.addEventListener('click', (event) => event.stopPropagation());
+        scheduleTimeInput.addEventListener('change', () => updateBookingSchedule(booking.id, scheduleDateInput.value, scheduleTimeInput.value));
+        moveBookingButton.addEventListener('click', (event) => {
+          event.stopPropagation();
+          moveBookingToClient(booking.id);
+        });
+        tr.setAttribute('role', 'button');
+        tr.setAttribute('tabindex', '0');
+        tr.setAttribute('aria-label', `Open booking form for ${booking.client}`);
+        const openForBooking = () => {
+          const nameParts = booking.client.split(' ');
+          clientModal.style.display = 'block';
+          clientModal.setAttribute('aria-hidden', 'false');
+          document.getElementById('clientFirstName').value = nameParts.shift() || '';
+          document.getElementById('clientLastName').value = nameParts.join(' ');
+          document.getElementById('clientEmail').value = `${booking.client.toLowerCase().replace(/\s+/g, '.')}@client.com`;
+          document.getElementById('clientPhone').value = '';
+          document.getElementById('clientInstitution').value = '';
+          document.getElementById('clientDateRequested').value = '';
+          document.getElementById('clientTimeRequested').value = '';
+          document.getElementById('clientPurpose').value = `Opened from bookings list: ${booking.schedule}`;
+          document.getElementById('clientFacility').value = '';
+          document.getElementById('clientParticipants').value = '';
+          document.getElementById('clientNotes').value = `Selected booking status: ${booking.status}`;
+        };
+        tr.addEventListener('click', openForBooking);
+        tr.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openForBooking();
+          }
+        });
+        bookingRows.appendChild(tr);
+      });
+    };
+
+    const getUnreadMailCount = (mails = []) => {
+      const readStates = ['Sent', 'Draft', 'Accepted', 'Declined'];
+      return mails.filter((mail) => {
+        const status = (mail.status || '').trim();
+        if (mail.isUnread === false) return false;
+        return !readStates.includes(status);
+      }).length;
+    };
+
+    const updateMailNotifier = (mails = []) => {
+      const unreadCount = getUnreadMailCount(mails);
+      if (mailCount) {
+        mailCount.textContent = unreadCount ? `${unreadCount} new` : 'Active';
+      }
+      if (mailNotifier) {
+        mailNotifier.classList.toggle('hidden', unreadCount === 0);
+        mailNotifier.textContent = unreadCount ? `${unreadCount} new mail${unreadCount > 1 ? 's' : ''}` : '';
+      }
+      if (mailInboxBadge) {
+        mailInboxBadge.classList.toggle('hidden', unreadCount === 0);
+        mailInboxBadge.textContent = unreadCount ? `${unreadCount} new` : '';
+      }
+    };
+
+    const markMailAsRead = (mail) => {
+      const storedMailRaw = localStorage.getItem(mailboxKey);
+      if (!storedMailRaw) return;
+      const storedMail = JSON.parse(storedMailRaw);
+      const matchIndex = storedMail.findIndex((item) =>
+        item.sender === mail.sender &&
+        item.subject === mail.subject &&
+        item.receivedAt === mail.receivedAt
+      );
+      if (matchIndex >= 0) {
+        storedMail[matchIndex] = { ...storedMail[matchIndex], isUnread: false };
+        localStorage.setItem(mailboxKey, JSON.stringify(storedMail));
+      }
+    };
+
+    const renderMailRows = () => {
+      const storedMailRaw = localStorage.getItem(mailboxKey);
+      const storedMail = storedMailRaw ? JSON.parse(storedMailRaw) : [];
+
+      const defaultMails = [
+        {
+          sender: 'naveen@client.com',
+          subject: 'Booking Confirmation',
+          status: 'Sent',
+          receivedAt: '2026-06-22',
+          body: 'First Name: Naveen\nLast Name: Singh\nEmail Address: naveen@client.com\nPhone Number: 0000000000\nInstitution / Organization: Demo Client\nDate Requested: 2026-06-22\nTime Requested: 10:00\nPurpose of Request: Booking Confirmation\nEquipment or Facility Needed: Main Hall\nNumber of Participants: 10\nSpecial Requests / Additional Information: N/A'
+        },
+        {
+          sender: 'sidharth@client.com',
+          subject: 'Request for Update',
+          status: 'Draft',
+          receivedAt: '2026-06-22',
+          body: 'First Name: Sidharth\nLast Name: Sukla\nEmail Address: sidharth@client.com\nPhone Number: 1111111111\nInstitution / Organization: Infosys Pvt Ltd\nDate Requested: 2026-06-22\nTime Requested: 13:30\nPurpose of Request: Request for Update\nEquipment or Facility Needed: Conference Room\nNumber of Participants: 12\nSpecial Requests / Additional Information: N/A'
+        },
+        {
+          sender: 'admin@cms.local',
+          subject: 'Weekly Report',
+          status: 'Sent',
+          receivedAt: '2026-06-22',
+          body: 'First Name: Admin\nLast Name: CMS\nEmail Address: admin@cms.local\nPhone Number: 2222222222\nInstitution / Organization: CMS Team\nDate Requested: 2026-06-22\nTime Requested: 09:00\nPurpose of Request: Weekly Report\nEquipment or Facility Needed: Office\nNumber of Participants: 1\nSpecial Requests / Additional Information: N/A'
+        }
+      ];
+
+      if (!storedMailRaw) {
+        localStorage.setItem(mailboxKey, JSON.stringify(defaultMails));
+      }
+
+      const allMails = storedMailRaw ? storedMail : defaultMails;
+
+      updateMailNotifier(allMails);
+      mailRows.innerHTML = '';
+
+      allMails.forEach((mail) => {
+        const receivedDate = mail.receivedAt ? new Date(mail.receivedAt).toLocaleDateString() : 'Just now';
+        const isUnread = mail.isUnread !== false && !['Sent', 'Draft', 'Accepted', 'Declined'].includes((mail.status || '').trim());
+        const row = document.createElement('tr');
+        row.className = `mail-row${isUnread ? ' unread' : ''}`;
+        row.setAttribute('role', 'button');
+        row.setAttribute('tabindex', '0');
+        row.setAttribute('aria-label', `Open mail from ${mail.sender}`);
+        row.innerHTML = `
+          <td>${mail.sender}</td>
+          <td>${mail.subject}</td>
+          <td><span class="pill ${mail.status === 'Draft' ? 'wait' : 'ok'}">${mail.status || 'Received'}</span></td>
+          <td>${receivedDate}</td>
+        `;
+
+        row.addEventListener('click', () => {
+          markMailAsRead(mail);
+          openMailModal(mail);
+        });
+
+        row.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            markMailAsRead(mail);
+            openMailModal(mail);
+          }
+        });
+
+        mailRows.appendChild(row);
+      });
+    };
+
+    const refreshClientView = () => {
+      const query = searchInput.value.trim().toLowerCase();
+      if (!query) {
+        renderClients(clients);
+        renderScheduleCalendar();
+      } else {
+        const filtered = clients.filter((client) =>
+          [client.name, client.company, client.status].some((value) => value.toLowerCase().includes(query))
+        );
+        renderClients(filtered);
+        renderScheduleCalendar();
+      }
+      renderClientScheduleSelector();
+    };
+
+    const filterClients = () => {
+      const query = searchInput.value.trim().toLowerCase();
+      if (!query) {
+        renderClients(clients);
+        searchResult.textContent = 'Type a name to filter the client list.';
+        return;
+      }
+      const filtered = clients.filter((client) =>
+        [client.name, client.company, client.status].some((value) => value.toLowerCase().includes(query))
+      );
+      renderClients(filtered);
+      searchResult.textContent = filtered.length ? `Found ${filtered.length} client(s) matching "${query}".` : `No clients found for "${query}".`;
+      if (filtered.length) {
+        const firstMatch = filtered[0];
+        activeClientForSchedule = firstMatch;
+        renderClientScheduleSelector();
+      }
+    };
+
+    searchBtn.addEventListener('click', filterClients);
+    searchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        filterClients();
+      }
+    });
+
+    menuButtons.forEach((button) => {
+      button.addEventListener('click', () => scrollToSection(button.dataset.target));
+    });
+
+    refreshBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      refreshClientView();
+      renderBookings();
+      renderMailRows();
+      searchResult.textContent = 'Dashboard refreshed.';
+      setVisibleSection('');
+      scrollToSection('dashboard');
+    });
+
+    clientScheduleClient?.addEventListener('change', () => {
+      const selectedClient = clients.find((client) => client.id === clientScheduleClient.value);
+      activeClientForSchedule = selectedClient || null;
+      updateClientSchedulePanel(selectedClient || null);
+    });
+
+    clientScheduleSaveBtn?.addEventListener('click', saveClientSchedule);
+    saveClientFromDashboardBtn?.addEventListener('click', saveClientFromDashboard);
+    deleteClientFromDashboardBtn?.addEventListener('click', deleteClientFromDashboard);
+
+    const logoutAction = () => {
+      const confirmed = window.confirm('Log out of the CMS panel?');
+      if (!confirmed) return;
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+      searchInput.value = '';
+      app.classList.remove('compact-sidebar');
+      refreshClientView();
+      renderBookings();
+      renderMailRows();
+      setVisibleSection('');
+      scrollToSection('dashboard');
+      searchResult.textContent = 'Logged out. Please sign in again.';
+      showLoginScreen('You have been logged out.');
+    };
+
+    logoutBtn.addEventListener('click', logoutAction);
+    logoutSidebarBtn.addEventListener('click', logoutAction);
+
+    settingsBtn.addEventListener('click', () => {
+      app.classList.toggle('compact-sidebar');
+      searchResult.textContent = app.classList.contains('compact-sidebar') ? 'Sidebar compact mode enabled.' : 'Sidebar expanded.';
+    });
+
+    profileBtn.addEventListener('click', () => {
+      alert('System Administrator\nStatus: Online\nClients: ' + document.getElementById('clientCount').textContent);
+    });
+
+    toolsBtn.addEventListener('click', () => {
+      scrollToSection('clients');
+      searchResult.textContent = 'Tools opened Clients List.';
+    });
+
+    openAddClientBtn.addEventListener('click', openAddClientModal);
+    closeAddClientModalBtn.addEventListener('click', closeAddClientModal);
+    pasteAddClientDetailsBtn.addEventListener('click', pasteAddClientDetails);
+    copyAddClientDetailsBtn.addEventListener('click', copyAddClientDetails);
+    closeClientModal.addEventListener('click', closeClientModalFn);
+    cancelClientBtn.addEventListener('click', closeClientModalFn);
+    clearAddClientBtn.addEventListener('click', clearAddClientForm);
+    pasteClientDetailsBtn.addEventListener('click', pasteBookingDetails);
+    copyClientDetailsBtn.addEventListener('click', copyBookingDetails);
+    closeMailModal.addEventListener('click', closeMailModalFn);
+    acceptBookingBtn.addEventListener('click', () => saveMailDecision('Accepted'));
+    declineBookingBtn.addEventListener('click', () => saveMailDecision('Declined'));
+    openBookingFromMailBtn.addEventListener('click', openBookingFromMail);
+    clientModal.addEventListener('click', (event) => {
+      if (event.target === clientModal) {
+        closeClientModalFn();
+      }
+    });
+
+    clientForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const firstName = document.getElementById('clientFirstName').value.trim();
+      const lastName = document.getElementById('clientLastName').value.trim();
+      const formClient = {
+        id: activeClientId || createClientId(),
+        name: `${firstName} ${lastName}`.trim(),
+        company: document.getElementById('clientInstitution').value.trim() || 'No organization',
+        status: 'Recently',
+        initial: (firstName.charAt(0) || 'C').toUpperCase(),
+        email: document.getElementById('clientEmail').value.trim(),
+        phone: document.getElementById('clientPhone').value.trim(),
+        dateRequested: document.getElementById('clientDateRequested').value.trim(),
+        timeRequested: document.getElementById('clientTimeRequested').value.trim(),
+        purpose: document.getElementById('clientPurpose').value.trim(),
+        facility: document.getElementById('clientFacility').value.trim(),
+        participants: document.getElementById('clientParticipants').value.trim(),
+        notes: document.getElementById('clientNotes').value.trim()
+      };
+
+      if (activeClientId) {
+        upsertClientRecord({ ...formClient, id: activeClientId });
+        searchResult.textContent = 'Client updated successfully.';
+      } else {
+        upsertClientRecord(formClient);
+        searchResult.textContent = 'Client added successfully.';
+      }
+
+      saveStoredClients(clients);
+      refreshClientView();
+      closeClientModalFn();
+    });
+
+    mailModal.addEventListener('click', (event) => {
+      if (event.target === mailModal) {
+        closeMailModalFn();
+      }
+    });
+
+    addClientPanel.addEventListener('click', (event) => {
+      if (event.target === addClientPanel) {
+        closeAddClientModal();
+      }
+    });
+
+    addClientForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const formClient = {
+        id: editingClientId || createClientId(),
+        name: `${addClientFirstName.value.trim()} ${addClientLastName.value.trim()}`,
+        company: addClientInstitution.value.trim() || 'No organization',
+        status: 'Recently',
+        initial: (addClientFirstName.value.trim().charAt(0) || 'C').toUpperCase(),
+        email: addClientEmail.value.trim(),
+        phone: addClientPhone.value.trim(),
+        dateRequested: addClientDateRequested.value.trim(),
+        timeRequested: addClientTimeRequested.value.trim(),
+        purpose: addClientPurpose.value.trim(),
+        facility: addClientFacility.value.trim(),
+        participants: addClientParticipants.value.trim(),
+        notes: addClientNotes.value.trim()
+      };
+
+      if (editingClientId) {
+        upsertClientRecord({ ...formClient, id: editingClientId });
+        searchResult.textContent = 'Client updated successfully.';
+      } else {
+        upsertClientRecord(formClient);
+        searchResult.textContent = 'Client added successfully.';
+      }
+
+      saveStoredClients(clients);
+      refreshClientView();
+      clearAddClientForm();
+      closeAddClientModal();
+    });
+
+    refreshClientView();
+    renderBookings();
+    renderMailRows();
+    setVisibleSection('');
+
+    window.addEventListener('storage', (event) => {
+      if (event.key === mailboxKey) {
+        renderMailRows();
+      }
+    });
+  </script>
+</body>
+</html>

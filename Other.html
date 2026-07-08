@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOST Regional Offices</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background-image:url("https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/474850167_1121802932861606_3245007256719510821_n%20(1).jpg");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:30px;
+}
+
+.container{
+    width:100%;
+    max-width:1100px;
+    text-align:center;
+}
+
+.main-office{
+    background:#1877F2;
+    color:white;
+    padding:25px 40px;
+    border-radius:20px;
+    display:inline-block;
+    box-shadow:0 5px 15px rgba(0,0,0,0.25);
+    margin-bottom:30px;
+}
+
+.main-link{
+    text-decoration:none;
+    color:white;
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+}
+
+.main-link:hover{
+    text-decoration:underline;
+}
+
+.main-link i{
+    font-size:35px;
+}
+
+.main-office h1{
+    font-size:38px;
+    margin-bottom:10px;
+}
+
+.main-office p{
+    color:#f0f2f5;
+    margin:5px 0;
+    font-size:20px;
+}
+
+.line{
+    width:100%;
+    height:2px;
+    background:rgba(255,255,255,0.6);
+    margin:30px 0;
+}
+
+.office-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
+    gap:25px;
+}
+
+.card-link{
+    text-decoration:none;
+    color:inherit;
+}
+
+.office-card{
+    background:#1877F2;
+    color:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    transition:0.3s;
+    cursor:pointer;
+    height:100%;
+}
+
+.office-card:hover{
+    transform:translateY(-5px);
+    background:#166FE5;
+}
+
+.office-card h2{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:12px;
+    font-size:22px;
+}
+
+.office-card h2 i{
+    font-size:24px;
+}
+
+.office-card p{
+    color:#f0f2f5;
+    margin:5px 0;
+    font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="main-office">
+        <h1>
+            <a href="https://www.facebook.com/AMCenIlocosRegion"
+               target="_blank"
+               class="main-link">
+                <i class="fa-brands fa-facebook"></i>
+                AMCen ilocos Region
+            </a>
+        </h1>
+
+        <p>Gov't Center Sevilla</p>
+        <p>City of San Fernando, 2500 La Union</p>
+    
+    </div>
+
+    <div class="line"></div>
+
+    <div class="office-grid">
+
+        <a href="https://www.facebook.com/DOSTIlocosNorte" target="_blank" class="card-link">
+            <div class="office-card">
+                <h2><i class="fa-brands fa-facebook"></i>DOST-ILOCOS NORTE</h2>
+                <p>City Center National Highway</p>
+                <p>Brgy. 02, Laoag City</p>
+                <p>(077) 670-9605 / 0917-840-8375</p>
+                <p>ilocosnorte@region1.dost.gov.ph</p>
+            </div>
+        </a>
+
+        <a href="https://www.facebook.com/dostilocos" target="_blank" class="card-link">
+            <div class="office-card">
+                <h2><i class="fa-brands fa-facebook"></i>REGIONAL OFFICE</h2>
+                <p>DOST Regional Office No. 1</p>
+                <p>Gov't Center Sevilla, La Union</p>
+                <p>(072) 888-3399</p>
+                <p>r1mail@region1.dost.gov.ph</p>
+            </div>
+        </a>
+
+        <a href="https://www.facebook.com/D0STIlocosSur" target="_blank" class="card-link">
+            <div class="office-card">
+                <h2><i class="fa-brands fa-facebook"></i>DOST-ILOCOS SUR</h2>
+                <p>PSHS-RC, Poblacion East</p>
+                <p>San Ildefonso, Ilocos Sur</p>
+                <p>(077) 722-3447</p>
+                <p>ilocossur@region1.dost.gov.ph</p>
+            </div>
+        </a>
+
+        <a href="https://www.facebook.com/DOSTcandon/" target="_blank" class="card-link">
+            <div class="office-card">
+                <h2><i class="fa-brands fa-facebook"></i>DOST-ILOCOS SUR SATELLITE OFFICE</h2>
+                <p>BSU, Candon City</p>
+                <p>Ilocos Sur</p>
+                <p>(070) 604-5337</p>
+                <p>office@dost.gov.ph</p>
+            </div>
+        </a>
+
+        <a href="https://www.facebook.com/DOSTPang" target="_blank" class="card-link">
+            <div class="office-card">
+                <h2><i class="fa-brands fa-facebook"></i>DOST-PANGASINAN SATELLITE OFFICE</h2>
+                <p>Pangasinan State University Campus</p>
+                <p>Lingayen, Pangasinan</p>
+                <p>(075) 632-4530</p>
+                <p>pangasinan@dost.gov.ph</p>
+            </div>
+        </a>
+
+        <a href="https://www.facebook.com/DOSTLaUnion" target="_blank" class="card-link">
+            <div class="office-card">
+                <h2><i class="fa-brands fa-facebook"></i>DOST-La Union</h2>
+                <p>Gov't Center Sevilla</p>
+        <p>City of San Fernando, 2500 La Union</p>
+        <p>(072) 242-0063 / 0977-840-8256 (Globe)</p>
+        <p>launion@region1.dost.gov.ph</p>
+            </div>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>News & Updates</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      width: 80%;
+      margin: 40px auto;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.6rem;
+      color: #1f4f3d;
+    }
+
+    .section-note {
+      color: #555;
+      margin-bottom: 18px;
+      padding: 12px 16px;
+      background: #eef7f0;
+      border-left: 4px solid #2a9d8f;
+      border-radius: 6px;
+    }
+
+    .post-access {
+      background: #fff;
+      padding: 22px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .post-access .field-group {
+      margin-bottom: 12px;
+    }
+
+    .post-access input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cfd8dc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .post-access .toggle-button {
+      position: absolute;
+      right: 0;
+      top: 34px;
+      height: 36px;
+      margin: 6px 8px 0 0;
+      padding: 0 12px;
+      border: none;
+      background: #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .button-primary,
+    .button-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .button-primary {
+      background: #2a9d8f;
+      color: #fff;
+      padding: 10px 16px;
+    }
+
+    .button-secondary {
+      background: #f1f5f2;
+      color: #2a9d8f;
+      padding: 10px 14px;
+    }
+
+    .button-primary:hover,
+    .button-secondary:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
+    .post-news h2 { margin-bottom: 12px; }
+    .post-news { background: #fff; padding: 24px; border-radius: 10px; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+
+    .news-card {
+      background: white;
+      display: flex;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      border-radius: 10px;
+      overflow: visible;
+      position: relative;
+      min-height: 240px;
+      max-width: 1800px;
+      width: 100%;
+    }
+
+    .news-image {
+      flex: 0 0 280px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      position: relative;
+    }
+
+    .news-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: none;
+      border: none;
+      padding: 0;
+      transition: object-fit 0.25s ease, transform 0.25s ease;
+      cursor: zoom-in;
+      transform-origin: center center;
+    }
+
+    .news-image:hover img {
+      object-fit: contain;
+      transform: scale(2.45);
+      z-index: 20;
+      transform-origin: center center;
+    }
+
+    .news-content {
+      padding: 22px;
+      flex-grow: 1;
+      min-width: 0;
+    }
+
+    .news-content h2 {
+      margin: 0 0 10px;
+      color: #222;
+    }
+
+    .news-content p {
+      color: #555;
+      line-height: 1.5;
+      max-height: 180px;
+      overflow-y: auto;
+      padding-right: 6px;
+      word-break: break-word;
+    }
+
+    .news-label {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      color: #000000;
+      font-weight: 700;
+    }
+
+    .news-meta {
+      margin-bottom: 14px;
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .field-group {
+      margin-bottom: 14px;
+    }
+
+    .field-group label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .field-group input,
+    .field-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cfd8dc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .field-group textarea {
+      resize: vertical;
+    }
+
+    .news-actions {
+      margin-top: 16px;
+    }
+
+    .news-actions button {
+      margin-right: 10px;
+    }
+
+    .pagination {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .pagination a {
+      text-decoration: none;
+      margin: 0 5px;
+      padding: 8px 12px;
+      color: #007B7F;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .pagination a.active {
+      background-color: #007B7F;
+      color: white;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <section class="post-access">
+    <h2>Unlock News Posting</h2>
+    <form id="post-access-form">
+      <div class="field-group" style="position:relative;">
+        <label for="post-access-password">Password</label>
+        <input id="post-access-password" name="accessPassword" type="password" placeholder="Enter password to publish" required>
+        <button id="toggle-password-visibility" type="button" class="button-secondary toggle-button">Show</button>
+      </div>
+      <div class="field-group">
+        <button type="submit" class="button-primary">Unlock Post Form</button>
+      </div>
+      <p id="access-message" style="color:#d32f2f; display:none; margin-top:10px;"></p>
+      <div class="section-note">Once unlocked, the public news preview will be hidden and the admin management area will appear.</div>
+    </form>
+  </section>
+
+  <!-- News submission form -->
+  <section class="post-news" id="post-news-section" style="display:none;">
+    <h2>Post a News Update</h2>
+    <form id="post-news-form">
+      <input id="news-password" name="password" type="hidden">
+      <input id="news-image-path" name="imagePath" type="hidden">
+      <div class="field-group">
+        <label for="news-title">Title</label>
+        <input id="news-title" name="title" type="text" required>
+      </div>
+      <div class="field-group">
+        <label for="news-date">Date</label>
+        <input id="news-date" name="date" type="text" placeholder="e.g. 2026-06-02" required>
+      </div>
+      <div class="field-group">
+        <label for="news-category">Label</label>
+        <input id="news-category" name="category" type="text" value="DOST">
+      </div>
+      <div class="field-group">
+        <label for="news-desc">Description</label>
+        <textarea id="news-desc" name="description" rows="4"></textarea>
+      </div>
+      <div class="field-group">
+        <label for="news-image">Image</label>
+        <input id="news-image" name="image" type="file" accept="image/*">
+      </div>
+      <div class="field-group news-actions">
+        <button type="submit" id="post-news-button" class="button-primary">Post News</button>
+      </div>
+    </form>
+    <hr style="margin:20px 0;">
+  </section>
+
+  <section class="admin-news" id="admin-news-section" style="display:none;">
+    <div class="section-header">
+      <h2>Manage News Items</h2>
+      <span class="news-label">Admin-only area</span>
+    </div>
+    <div class="section-note">You have unlocked the news editor. This view is for editing and deleting published news items.</div>
+    <div id="admin-news-list"></div>
+  </section>
+
+  <section class="public-news" id="public-news-section">
+    <div class="section-header">
+      <h2>Published News</h2>
+    </div>
+    <div id="news-list"></div>
+  </section>
+</div>
+
+<script>
+  // Determine API base URL - use localhost:3000 if opening locally, otherwise relative path
+  const API_BASE = window.location.protocol === 'file:' 
+    ? 'http://127.0.0.1:3000/api' 
+    : '/api';
+  const NEWS_SOURCE = API_BASE + '/news';
+  const ADMIN_PASSWORD = '0n3dost4u';
+  const DEFAULT_IMAGE_URL = 'https://dummyimage.com/300x180/cccccc/ffffff?text=No+Image';
+  const NEWS_STORAGE_KEY = 'amcen_news_items';
+  const LOCAL_NEWS_FALLBACK = [];
+  const BASE_FOR_UPLOADS = '';
+  const resolveImageUrl = (path) => {
+    if (!path) return DEFAULT_IMAGE_URL;
+    if (path.startsWith('http')) return path;
+    return path;
+  };
+  const getStoredNews = () => {
+    try {
+      const raw = localStorage.getItem(NEWS_STORAGE_KEY);
+      if (!raw) {
+        localStorage.setItem(NEWS_STORAGE_KEY, JSON.stringify(LOCAL_NEWS_FALLBACK));
+        return [...LOCAL_NEWS_FALLBACK];
+      }
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed) || !parsed.length) {
+        localStorage.setItem(NEWS_STORAGE_KEY, JSON.stringify(LOCAL_NEWS_FALLBACK));
+        return [...LOCAL_NEWS_FALLBACK];
+      }
+      return parsed;
+    } catch {
+      localStorage.setItem(NEWS_STORAGE_KEY, JSON.stringify(LOCAL_NEWS_FALLBACK));
+      return [...LOCAL_NEWS_FALLBACK];
+    }
+  };
+
+  const clearStoredNews = () => {
+    localStorage.removeItem(NEWS_STORAGE_KEY);
+    return [];
+  };
+
+  const normalizeNewsItems = (items) => {
+    if (!Array.isArray(items)) return [];
+    return items
+      .map((item) => ({
+        id: item.id,
+        title: item.title || '',
+        date: item.date || '',
+        category: item.category || 'DOST',
+        description: item.description || '',
+        image_path: item.image_path || '',
+        created_at: item.created_at || Date.now()
+      }))
+      .sort((a, b) => Number(b.created_at || 0) - Number(a.created_at || 0));
+  };
+
+  const saveStoredNews = (items) => {
+    const normalized = normalizeNewsItems(items);
+    localStorage.setItem(NEWS_STORAGE_KEY, JSON.stringify(normalized));
+    return normalized;
+  };
+
+  let editingId = null;
+  const postAccessForm = document.getElementById('post-access-form');
+  const postNewsSection = document.getElementById('post-news-section');
+  const adminNewsSection = document.getElementById('admin-news-section');
+  const publicNewsSection = document.getElementById('public-news-section');
+  const accessMessage = document.getElementById('access-message');
+  const hiddenPasswordInput = document.getElementById('news-password');
+  const hiddenImagePathInput = document.getElementById('news-image-path');
+  const postNewsButton = document.getElementById('post-news-button');
+  const accessPasswordInput = document.getElementById('post-access-password');
+  const togglePasswordVisibility = document.getElementById('toggle-password-visibility');
+
+  const clearEditState = () => {
+    editingId = null;
+    postNewsButton.textContent = 'Post News';
+    document.getElementById('news-title').value = '';
+    document.getElementById('news-date').value = getToday();
+    document.getElementById('news-category').value = 'DOST';
+    document.getElementById('news-desc').value = '';
+    document.getElementById('news-image').value = '';
+    hiddenImagePathInput.value = '';
+  };
+
+  const compressImage = (file) => new Promise((resolve, reject) => {
+    if (!file) {
+      resolve('');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const maxWidth = 900;
+        const maxHeight = 600;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height, 1);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d');
+        context.drawImage(img, 0, 0, width, height);
+
+        const outputType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+        const quality = outputType === 'image/png' ? 1 : 0.8;
+        resolve(canvas.toDataURL(outputType, quality));
+      };
+      img.onerror = reject;
+      img.src = event.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+  const getToday = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const setupImagePreview = (img) => {
+    if (!img) return;
+    const wrapper = img.parentElement;
+    if (!wrapper) return;
+
+    const resetPosition = () => {
+      img.style.setProperty('--preview-left', '50%');
+      img.style.setProperty('--preview-top', '50%');
+    };
+
+    wrapper.addEventListener('mousemove', (event) => {
+      const rect = wrapper.getBoundingClientRect();
+      const x = ((event.clientX - rect.left) / rect.width) * 100;
+      const y = ((event.clientY - rect.top) / rect.height) * 100;
+      img.style.setProperty('--preview-left', `${x}%`);
+      img.style.setProperty('--preview-top', `${y}%`);
+    });
+
+    wrapper.addEventListener('mouseleave', resetPosition);
+    img.addEventListener('mouseleave', resetPosition);
+    resetPosition();
+  };
+
+  const renderAdminNewsList = (items) => {
+    const adminList = document.getElementById('admin-news-list');
+    adminList.innerHTML = '';
+    if (!items.length) {
+      adminList.innerHTML = '<p>No news items available.</p>';
+      return;
+    }
+    items.forEach(item => adminList.appendChild(createAdminNewsCard(item)));
+  };
+
+  const renderPublicNewsList = (items) => {
+    const newsList = document.getElementById('news-list');
+    newsList.innerHTML = '';
+    if (!items.length) {
+      newsList.innerHTML = '<p>No news items yet. Post one above.</p>';
+      return;
+    }
+    items.forEach(item => newsList.appendChild(createNewsCard(item)));
+  };
+
+  const loadAdminNews = async () => {
+    const adminList = document.getElementById('admin-news-list');
+    adminList.innerHTML = '<p>Loading admin news...</p>';
+    try {
+      const response = await fetch(`${API_BASE}/news`, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      const items = saveStoredNews(Array.isArray(data) ? data : []);
+      renderAdminNewsList(items);
+      renderPublicNewsList(items);
+      return items;
+    } catch (error) {
+      console.error('Failed to load news from API:', error);
+      const data = getStoredNews();
+      renderAdminNewsList(data);
+      renderPublicNewsList(data);
+      return data;
+    }
+  };
+
+  const createAdminNewsCard = (item) => {
+    const card = document.createElement('div');
+    card.className = 'news-card';
+    const imageUrl = resolveImageUrl(item.image_path);
+    card.innerHTML = `
+      <div class="news-image">
+        <img src="${imageUrl}" alt="${item.title}">
+      </div>
+      <div class="news-content">
+        <h2>${item.title}</h2>
+        <p><strong>${item.date}</strong> · ${item.category || 'Updates'}</p>
+        <p>${item.description || ''}</p>
+        <div style="margin-top:12px;">
+          <button type="button" class="edit-news" style="margin-right:8px;padding:8px 12px;border:none;border-radius:6px;background:#4a90e2;color:#fff;cursor:pointer;">Edit</button>
+          <button type="button" class="delete-news" style="padding:8px 12px;border:none;border-radius:6px;background:#e63946;color:#fff;cursor:pointer;">Delete</button>
+        </div>
+      </div>
+    `;
+
+    const imageEl = card.querySelector('.news-image img');
+    setupImagePreview(imageEl);
+
+    card.querySelector('.edit-news').addEventListener('click', () => {
+      editingId = item.id;
+      document.getElementById('news-title').value = item.title;
+      document.getElementById('news-date').value = item.date;
+      document.getElementById('news-category').value = item.category || 'DOST';
+      document.getElementById('news-desc').value = item.description || '';
+      hiddenImagePathInput.value = item.image_path || '';
+      postNewsButton.textContent = 'Update News';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    card.querySelector('.delete-news').addEventListener('click', async () => {
+      if (!confirm('Delete this news item?')) return;
+      try {
+        const latestItems = await loadNews();
+        const currentItem = latestItems.find((newsItem) => String(newsItem.id) === String(item.id));
+        if (!currentItem) {
+          throw new Error('This post is no longer available on the server.');
+        }
+
+        const response = await fetch(`${API_BASE}/news/${currentItem.id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: hiddenPasswordInput.value || ADMIN_PASSWORD })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'Delete failed');
+
+        const remainingItems = getStoredNews().filter((newsItem) => String(newsItem.id) !== String(currentItem.id));
+        saveStoredNews(remainingItems);
+
+        alert('News deleted');
+        clearEditState();
+        await loadNews();
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'Failed to delete news');
+      }
+    });
+
+    return card;
+  };
+
+  togglePasswordVisibility.addEventListener('click', () => {
+    const isPassword = accessPasswordInput.type === 'password';
+    accessPasswordInput.type = isPassword ? 'text' : 'password';
+    togglePasswordVisibility.textContent = isPassword ? 'Hide' : 'Show';
+  });
+
+  postAccessForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    accessMessage.style.display = 'none';
+    const password = accessPasswordInput.value.trim();
+    if (password === ADMIN_PASSWORD) {
+      hiddenPasswordInput.value = password;
+      postAccessForm.closest('section').style.display = 'none';
+      postNewsSection.style.display = 'block';
+      adminNewsSection.style.display = 'block';
+      if (publicNewsSection) {
+        publicNewsSection.style.display = 'none';
+      }
+      loadAdminNews();
+    } else {
+      accessMessage.textContent = 'Invalid password';
+      accessMessage.style.display = 'block';
+    }
+  });
+
+  document.getElementById('post-news-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('news-title').value.trim();
+    const date = document.getElementById('news-date').value.trim();
+    const category = document.getElementById('news-category').value.trim() || 'DOST';
+    const desc = document.getElementById('news-desc').value.trim();
+    const fileInput = document.getElementById('news-image');
+
+    const body = {
+      title,
+      date,
+      category,
+      description: desc,
+      password: hiddenPasswordInput.value || ADMIN_PASSWORD
+    };
+
+    if (fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+      try {
+        body.image_path = await compressImage(file);
+        await sendNews(body);
+      } catch (error) {
+        console.error(error);
+        alert('Failed to process the selected image.');
+      }
+    } else if (editingId && hiddenImagePathInput.value) {
+      body.image_path = hiddenImagePathInput.value;
+      await sendNews(body);
+    } else {
+      await sendNews(body);
+    }
+
+    async function sendNews(newsBody) {
+      try {
+        const method = editingId ? 'PUT' : 'POST';
+        const url = editingId ? `${API_BASE}/news/${editingId}` : `${API_BASE}/news`;
+        const response = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newsBody)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'News save failed');
+
+        const existingItems = getStoredNews().filter((newsItem) => String(newsItem.id) !== String(result.data.id));
+        saveStoredNews([result.data, ...existingItems]);
+        alert(editingId ? 'News updated successfully.' : 'News posted successfully.');
+        clearEditState();
+        await loadNews();
+      } catch (error) {
+        console.error(error);
+        alert(error.message || 'Failed to save news');
+      }
+    }
+  });
+
+  const createNewsCard = (item) => {
+    const card = document.createElement('div');
+    card.className = 'news-card';
+    const imageUrl = resolveImageUrl(item.image_path);
+    card.innerHTML = `
+      <div class="news-image">
+        <img src="${imageUrl}" alt="${item.title}">
+      </div>
+      <div class="news-content">
+        <h2>${item.title}</h2>
+        <p><strong>${item.date}</strong> · ${item.category || 'DOST'}</p>
+        <p>${item.description || ''}</p>
+      </div>
+    `;
+    const imageEl = card.querySelector('.news-image img');
+    setupImagePreview(imageEl);
+    return card;
+  };
+
+  const loadNews = async () => {
+    const newsList = document.getElementById('news-list');
+    newsList.innerHTML = '<p>Loading news...</p>';
+    try {
+      const response = await fetch(`${API_BASE}/news`, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      const items = saveStoredNews(Array.isArray(data) ? data : []);
+      renderPublicNewsList(items);
+      renderAdminNewsList(items);
+      return items;
+    } catch (error) {
+      console.error('Failed to load news from API:', error);
+      const data = getStoredNews();
+      renderPublicNewsList(data);
+      renderAdminNewsList(data);
+      return data;
+    }
+  };
+
+  // Initialize form with today's date
+  clearEditState();
+  loadNews();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+SETUP INSTRUCTIONS FOR DOST AMCen BOOKING FORM
+==============================================
+
+This system sends emails directly from your Gmail account (NO third-party services needed!)
+
+REQUIREMENTS:
+- Node.js installed (download from: https://nodejs.org/)
+- Gmail account: sv5323815@gmail.com
+
+STEP-BY-STEP SETUP:
+
+1. GENERATE GMAIL APP PASSWORD
+   - Go to: https://myaccount.google.com/security
+   - Click "App passwords" (if you don't see it, enable 2-factor authentication first)
+   - Select "Mail" and "Windows Computer"
+   - Google will generate a 16-character password
+   - COPY THIS PASSWORD
+
+2. UPDATE server.js
+   - Open server.js in VS Code
+   - Find line: pass: 'YOUR_GMAIL_APP_PASSWORD'
+   - Replace 'YOUR_GMAIL_APP_PASSWORD' with the 16-character password from step 1
+   - SAVE the file
+
+3. INSTALL DEPENDENCIES
+   - Open PowerShell in your folder (Shift + Right-click > "Open PowerShell here")
+   - Type: npm install
+   - Wait for it to complete
+
+4. START THE SERVER
+   - In PowerShell, type: npm start
+   - You should see: "Server running at http://localhost:3000"
+   - KEEP THIS WINDOW OPEN
+
+5. TEST THE FORM
+   - Open online booking.html in your browser
+   - Fill out all fields
+   - Click "Submit Reservation"
+   - Check your Gmail inbox - you should receive the email!
+
+TROUBLESHOOTING:
+- If emails don't send: Check that you used the correct 16-character App Password
+- If port 3000 is busy: Change the PORT variable in server.js to 3001 or 3002
+- Make sure the server is running in PowerShell before submitting the form
+
+That's it! Your booking form now sends emails directly to your Gmail! 🎉

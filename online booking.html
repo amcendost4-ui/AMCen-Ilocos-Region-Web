@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOST AMCen Booking Request Form</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background: linear-gradient(rgba(248, 248, 248, 0.82), rgba(248, 248, 248, 0.82)),
+                url('https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/474850167_1121802932861606_3245007256719510821_n%20(1).jpg') center/cover no-repeat fixed;
+    padding:40px;
+    min-height:100vh;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.header{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.header img{
+    width:100px;
+    flex-shrink:0;
+    margin-bottom:0;
+}
+
+h1{
+    color:#003366;
+    font-size:36px;
+    font-weight:300;
+    margin:0;
+}
+
+h2{
+    margin:25px 0 15px;
+    color:#333;
+    font-size:28px;
+    font-weight:300;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    font-weight:bold;
+    color:#444;
+}
+
+input,
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #d9cfa3;
+    border-radius:4px;
+    margin-bottom:20px;
+    font-size:15px;
+}
+
+textarea{
+    resize:vertical;
+}
+
+.row{
+    display:flex;
+    gap:15px;
+}
+
+.col{
+    flex:1;
+}
+
+button{
+    padding:15px;
+    background:#003366;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+button:hover{
+    background:#0055aa;
+}
+
+.button-group{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.button-group button{
+    flex:1;
+    min-width:150px;
+}
+
+.button-group #printBtn{
+    flex:0;
+    min-width:50px;
+    padding:15px 12px;
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.secondary-btn{
+    background:#e9f2fb;
+    color:#003366;
+    border:1px solid #b7cce6;
+}
+
+.secondary-btn:hover{
+    background:#d8e8f8;
+}
+
+.success-message{
+    display:none;
+    background:#d4edda;
+    color:#155724;
+    padding:15px;
+    border-radius:5px;
+    margin-bottom:20px;
+    border:1px solid #c3e6cb;
+    font-weight:bold;
+    font-size:16px;
+    line-height:1.5;
+}
+
+.error-message{
+    display:none;
+    background:#f8d7da;
+    color:#721c24;
+    padding:15px;
+    border-radius:5px;
+    margin-bottom:20px;
+    border:1px solid #f5c6cb;
+    font-weight:bold;
+    font-size:16px;
+    line-height:1.5;
+}
+
+@media(max-width:768px){
+    .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+    }
+
+    .row{
+        flex-direction:column;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Untitled%20design%20(2).png" alt="DOST AMCen Logo">
+        <h1>DOST X AMCen Booking Request Form</h1>
+    </div>
+
+    <form id="bookingForm">
+        <input type="hidden" name="_captcha" value="false">
+
+        <div class="success-message" id="successMessage">
+            ✓ <strong>Send Successful!</strong><br>Your booking request has been submitted successfully. You will receive a confirmation email shortly.
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            ✗ <strong>Send Failed!</strong><br>Failed to send your booking request. Please check your connection and try again.
+        </div>
+
+        <h2>Customer Information</h2>
+
+        <div class="row">
+            <div class="col">
+                <label>First Name</label>
+                <input type="text" name="firstName" id="firstName" required>
+            </div>
+
+            <div class="col">
+                <label>Last Name</label>
+                <input type="text" name="lastName" id="lastName" required>
+            </div>
+        </div>
+
+        <label>Email Address</label>
+        <input type="email" name="email" id="email" required>
+
+        <label>Phone Number</label>
+        <input type="tel" name="phone" id="phone" required>
+
+        <label>Institution / Organization</label>
+        <input type="text" name="institution" id="institution">
+
+        <h2>Booking Details</h2>
+
+        <div class="row">
+            <div class="col">
+                <label>Date Requested</label>
+                <input type="date" name="dateRequested" id="dateRequested" required>
+            </div>
+
+            <div class="col">
+                <label>Time Requested</label>
+                <input type="time" name="timeRequested" id="timeRequested" required>
+            </div>
+        </div>
+
+        <label>Purpose of Request</label>
+        <input
+            type="text"
+            name="purpose"
+            id="purpose"
+            placeholder="Research, Testing, Training, Seminar, etc."
+            required>
+
+        <h2>Service Information</h2>
+
+        <label>Equipment or Facility Needed</label>
+        <input type="text" name="facility" id="facility" required>
+
+        <label>Number of Participants</label>
+        <input type="number" name="participants" id="participants">
+
+        <label>Special Requests / Additional Information</label>
+        <textarea name="requests" id="requests" rows="5"></textarea>
+
+        <div class="button-group">
+            <button type="submit" id="submitBtn">Submit Reservation</button>
+            <button type="button" id="printBtn" title="Print Form">🖨️</button>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+
+// Print form
+function printForm(){
+    window.print();
+}
+
+// Show success message
+function showSuccess(){
+    document.getElementById("successMessage").style.display = "block";
+    document.getElementById("errorMessage").style.display = "none";
+    setTimeout(() => {
+        document.getElementById("successMessage").style.display = "none";
+    }, 5000);
+}
+
+// Show error message
+function showError(){
+    document.getElementById("errorMessage").style.display = "block";
+    document.getElementById("successMessage").style.display = "none";
+    setTimeout(() => {
+        document.getElementById("errorMessage").style.display = "none";
+    }, 5000);
+}
+
+// Handle form submission
+document.getElementById("bookingForm").addEventListener("submit", async function(event){
+    event.preventDefault();
+    
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.textContent = "Sending...";
+
+    const mailboxKey = "cms_mailbox";
+
+    // Collect form data
+    const formData = {
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        institution: document.getElementById("institution").value,
+        dateRequested: document.getElementById("dateRequested").value,
+        timeRequested: document.getElementById("timeRequested").value,
+        purpose: document.getElementById("purpose").value,
+        facility: document.getElementById("facility").value,
+        participants: document.getElementById("participants").value,
+        requests: document.getElementById("requests").value
+    };
+
+    try {
+        const mailboxRaw = localStorage.getItem(mailboxKey);
+        const mailbox = mailboxRaw ? JSON.parse(mailboxRaw) : [];
+
+        const mailEntry = {
+            id: Date.now(),
+            sender: `${formData.firstName} ${formData.lastName} <${formData.email}>`,
+            recipient: 'admin@cms.local',
+            subject: `Booking Request - ${formData.firstName} ${formData.lastName}`,
+            status: 'Received',
+            receivedAt: new Date().toISOString(),
+            body: [
+                'New booking request from the online form:',
+                '',
+                `Name: ${formData.firstName} ${formData.lastName}`,
+                `Email: ${formData.email}`,
+                `Phone: ${formData.phone}`,
+                `Institution / Organization: ${formData.institution}`,
+                `Date Requested: ${formData.dateRequested}`,
+                `Time Requested: ${formData.timeRequested}`,
+                `Purpose: ${formData.purpose}`,
+                `Equipment / Facility: ${formData.facility}`,
+                `Participants: ${formData.participants}`,
+                `Special Requests: ${formData.requests}`,
+            ].join('\n')
+        };
+
+        mailbox.unshift(mailEntry);
+        localStorage.setItem(mailboxKey, JSON.stringify(mailbox));
+
+        showSuccess();
+        document.getElementById("bookingForm").reset();
+    } catch(error){
+        console.error("Failed to save booking email:", error);
+        showError();
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "Submit Reservation";
+    }
+});
+
+// Print button event listener
+document.getElementById("printBtn").addEventListener("click", function(){
+    printForm();
+});
+
+</script>
+
+</body>
+</html>

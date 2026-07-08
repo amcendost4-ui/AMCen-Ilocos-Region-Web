@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOST AMCen</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    margin:0;
+    padding:0;
+    font-family:'Poppins',sans-serif;
+    position:relative;
+    min-height:100vh;
+    background:#f4f7fa;
+}
+
+
+body::before{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+
+    background:url('https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/474850167_1121802932861606_3245007256719510821_n%20(1).jpg') center center/cover no-repeat;
+
+    opacity:0.80; 
+    z-index:-2;
+}
+
+
+body::after{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:white;
+    opacity:0.75;
+    z-index:-1;
+}
+}
+
+/* HEADER */
+header{
+    background:white;
+    padding:15px 50px;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+
+.logo-area{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.logo-area img{
+    height:80px;
+    width:auto;
+    object-fit:contain;
+    background:transparent;
+    padding:0;
+    border-radius:0;
+    box-shadow:none;
+    transition:0.3s ease;
+}
+
+.logo-area img:hover{
+    transform:scale(1.08);
+}
+}
+
+.logo-area img:hover{
+    transform:scale(1.1);
+}
+
+.logo-area h1{
+    color:#005b96;
+    font-size:1.8rem;
+}
+
+/* HERO SECTION */
+.hero{
+    color:#2f62c2;
+    text-align:center;
+    padding:40px 20px;
+}
+
+.hero h2{
+    font-size:3rem;
+    margin-bottom:15px;
+    color:#151b26;
+}
+
+.hero p{
+    max-width:800px;
+    margin:auto;
+    font-size:1.1rem;
+    color:#2f62c2;
+}
+
+.container{
+    width:90%;
+    margin:auto;
+    padding:20px 0;
+    display:flex;
+    flex-wrap: wrap ;
+    gap:30px;
+}
+
+.gallery,
+.services,
+.about{
+    max-height:1250px;
+    display:flex;
+    flex-wrap: wrap;
+    overflow:hidden;
+}
+
+
+.gallery{
+    flex:1;
+    display:grid;
+    gap:15px;
+}
+
+.gallery-item{
+    position:relative;
+    overflow:hidden;
+    border-radius:18px;
+    margin-bottom:10px;
+   
+}
+
+.gallery-item img{
+    width:100%;
+    display:block;
+    border-radius:18px;
+    transition:.5s;
+    box-shadow:0 8px 25px rgba(0,0,0,.15);
+}
+
+.gallery-item:hover img{
+    transform:scale(1.08);
+}
+
+.gallery-item::after{
+    content:"DOST_AMCen";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,91,150,.75);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:20px;
+    opacity:0;
+    transition:.4s;
+}
+
+.gallery-item:hover::after{
+    opacity:1;
+}
+
+
+.services{
+    flex:1;
+    background:linear-gradient(180deg,#7ddfff,#0088cc);
+    color:white;
+    padding:30px;
+    border-radius:20px;
+}
+
+.services h2{
+    margin-bottom:25px;
+}
+
+.service-item{
+    margin-bottom:15px;
+}
+
+.service-icon{
+    font-size:40px;
+    margin-bottom:10px;
+    display:block;
+    transition:.3s;
+}
+
+.service-icon:hover{
+    transform:scale(1.2);
+}
+
+/* ABOUT */
+.about{
+  flex:1;
+    background:white;
+    padding:15px;
+    border-radius:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.about h2{
+    color:#005b96;
+    margin-top:20px;
+    text-align:Center;
+}
+.about p{
+ font-family: Georgia;
+ font-size:20px;
+}
+.about-logo{
+    position:relative;
+     left:150px;
+     width:20px;
+    height:100px;/* move logo right */
+     margin-top: 200px;
+    top:30px;
+}
+.about img{
+    width:100%;
+    margin-top:15px;
+    border-radius:18px;
+    transition:.4s;
+    box-shadow:0 8px 25px rgba(0,0,0,.15);
+     overflow: hidden;
+}
+
+/* PRINTER SECTION */
+.printers-section{
+    width:90%;
+    margin:auto;
+    padding-bottom:50px;
+}
+
+.printers{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.printers h2{
+    color:#005b96;
+    margin-bottom:25px;
+}
+
+.printer-card{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:15px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.printer-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 10px 25px rgba(0,91,150,.2);
+}
+
+.printer-card img{
+    width:90px;
+    height:90px;
+    object-fit:contain;
+}
+
+.printer-info h4{
+    color:#005b96;
+}
+
+h2 i{
+    margin-right:10px;
+    color:#00b4ff;
+}
+
+/* FOOTER */
+footer{
+    background:#003b5c;
+    color:white;
+    text-align:center;
+    padding:25px;
+}
+
+
+@media(max-width:100px){
+
+    .container{
+        grid-template-columns:1fr;
+    }
+
+    .hero h2{
+        font-size:2rem;
+    }
+
+    .logo-area{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    header{
+        padding:20px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo-area">
+        <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/431365298_929688665827226_5936863027706944885_n.png" alt="DOST Logo">
+        <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Amcen%20ilocos%20region.png" alt="AMCen Logo">
+         <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/download%20(5).png" alt="AMCen Logo">
+        <h1>DOST - Advanced Manufacturing Center (AMCen)</h1>
+    </div>
+</header>
+
+<section class="hero">
+    <h2>THE CHALLENGE</h2>
+    <p>
+       Traditional manufacturing in the Philippines struggles with costly prototyping, limited access to advanced tools, and slow tech transfer—hindering product development and MSME competitiveness. The AMCen network addresses these gaps by decentralizing advanced manufacturing and offering local 3D printing, prototyping, and digital design services
+    </p>
+</section>
+
+<div class="container">
+
+    <!-- GALLERY -->
+    <div class="gallery">
+
+        <div class="gallery-item">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/siglat%20dost%20enhanced4K.jpg" alt="Project 1"class="center-image">
+        </div>
+
+        <div class="gallery-item">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Facility%20(1)%20-%20Edited.jpg" alt="Project 2">
+        </div>
+
+        <div class="gallery-item">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/IMG_1030.JPG" alt="Project 3">
+        </div>
+
+    </div>
+
+    <!-- SERVICES -->
+    <div class="services">
+
+        <h2><i class="fas fa-cogs"></i>Services</h2>
+
+        <div class="service-item">
+            <i class="fas fa-cube service-icon"></i>
+            <h3>Additive Manufacturing &       
+        Prototyping</h3>
+            <p>We provide 3D printing solutions that turn digital designs into functional prototypes and custom parts,
+            enabling faster innovation and reduced development costs.</p>
+        </div>
+
+        <div class="service-item">
+            <i class="fas fa-laptop-code service-icon"></i>
+            <h3>Product Development Clinics</h3>
+            <p>Our experts guide innovators and enterprises through consultations to refine product concepts,
+            improve designs, and prepare technologies for market entry.</p>
+        </div>
+
+        <div class="service-item">
+            <i class="fas fa-microscope service-icon"></i>
+            <h3>3D Scanning & Reverse Engineering</h3>
+            <p>Using advanced 3D scanners, we capture precise digital models of existing objects for design replication,
+            modification, and performance enhancement..</p>
+        </div>
+
+        <div class="service-item">
+            <i class="fas fa-chalkboard-teacher service-icon"></i>
+            <h3>Training & Workshops</h3>
+            <p>We offer hands-on training and specialized workshops to build skills in advanced manufacturing,
+            3D design, and digital fabrication technologies</p>
+        </div>
+
+        <div class="service-item">
+            <i class="fas fa-handshake service-icon"></i>
+            <h3>Collaboration & Referral</h3>
+            <p>We connect clients with research institutions, industry partners,
+            and government agencies to strengthen innovation networks and accelerate project success.</p>
+        </div>
+
+    </div>
+
+    <!-- ABOUT -->
+    <div class="about">
+
+    <div class="about-title">
+    <h2><i class="fas fa-building"></i> About AMCen</h2>
+    <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Untitled%20design%20(2).png" alt="AMCen Logo" class="about-logo">
+</div>
+
+        <p>
+            The Advanced Manufacturing Center — I ILocos Region (AMCEN ILocos Region) is the region’s premier hub for additive manufacturing,
+            digital design, and prototyping. Operated under the DOST regional network and linked with DOST–MIRDC technical expertise, AMCEN ILocos Region supports innovators, startups, MSMEs, students, and government programs by providing access to modern 3D printing systems, CAD resources, and hands-on technical assistance. We bridge R&D and production so regional ideas become competitive products.
+        </p>
+
+        <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/AMCEN%20night%20cropped.jpg" alt="AMCen Facility">
+
+    </div>
+
+</div>
+
+<!-- PRINTERS -->
+<section class="printers-section">
+
+    <div class="printers">
+
+        <h2><i class="fas fa-print"></i>3D Printing Units</h2>
+
+        <div class="printer-card">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Bambu-Lab-X1-Carbon-PF001-P-EU-29185_1-1100x1080.png" alt="Printer">
+            <div class="printer-info">
+                <h4>Bambu Lab X1C Carbon</h4>
+                <p>Build volume: 220 × 220 × 240 mm
+                   Print speed : up to 250 mm/s & max acceleration ~ 2500 mm/s²
+                   Materials usable: PLA, PETG, and TPU</p>
+            </div>
+        </div>
+
+        <div class="printer-card">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/p1s-footer-8b1ba6b450474.png" alt="Printer">
+            <div class="printer-info">
+                <h4>Bambu Lab P1S</h4>
+                <p>
+                 Build volume: 256 × 256 × 256 mm
+                Layer resolution: 0.04 mm - 0.08 mm
+                Print speed: up to 500 mm/s & max
+                acceleration 20,000 mm/s²
+                Materials usable: PLA, PETG, TPU,
+                PVA (support), ABS, ASA, PC, PA
+                (nylon) and engineering filaments</p>
+            </div>
+        </div>
+
+        <div class="printer-card">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/BAMBU_LAB_A1_MINI_COMBO_01.jpg" alt="Printer">
+            <div class="printer-info">
+                <h4>Bambu Lab A1</h4>
+                <p>Build volume: 180 × 180 × 180 mm
+                   Print speed : up to 500 mm/s & max
+                   acceleration ~10,000 mm/s²
+                   Materials usable: PLA, PETG, TPU,
+                   PVA (support), ABS, ASA, PC, PA
+                   (nylon) and engineering filaments.</p>
+            </div>
+        </div>
+
+    <div class="printer-card">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/download%20bg%20balu.png" alt="Printer">
+            <div class="printer-info">
+                <h4>Bambu Lab A1 mini</h4>
+                <p>Build volume: 180 × 180 × 180 mm
+                   Print speed : up to 500 mm/s & max
+                   acceleration ~10,000 mm/s²
+                   Materials usable: PLA, PETG, TPU,
+                   PVA (support), ABS, ASA, PC, PA
+                   (nylon) and engineering filaments.</p>
+            </div>
+        </div>
+        
+    <div class="printer-card">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/download%20bg.png" alt="Printer">
+            <div class="printer-info">
+                <h4>Elogoo Saturn 3 Ultra</h4>
+                <p>Build volume: 219 × 120 × 250 mm
+                   Layer (Z) resolution: up to 0.01–0.2 mm layer thicknes
+                   Print speed: up to mo 30 - 70mm/h
+                   Materials Usable: Compatible with standard 405 nm UV resin types: standard / tough / transparent
+                   / flexible / castable / dental / high-temp resins (depending on resin manufacturer)
+.</p>
+            </div>
+        </div>
+        
+    <div class="printer-card">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/download%20v3%20plus.png" alt="Printer">
+            <div class="printer-info">
+                <h4>Creality Ender-3 V3 Plus</h4>
+                <p>Creality Ender-3 V3 Plus
+                   Build volume: 300 × 300 × 330 mm
+                   Print speed : up to 600 mm/s & max acceleration ~ 20000 mm/s²
+                   Materials usable: PLA, PETG, TPU, ABS, carbon-fiber infused filaments (e.g. PLA-CF, PETG-CF).</p>
+            </div>
+        </div>
+        
+   <div class="printer-card">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/creality-ender-3-v3-ke-1-pc-584188-en.png" alt="Printer">
+            <div class="printer-info">
+                <h4>Creality Ender V3 KE</h4>
+                <p>Build volume: 220 × 220 × 240 mm
+                   Print speed : up to 250 mm/s & max
+                   acceleration ~ 8000 mm/s²
+                   Materials usable: PLA, PETG, and TPU.</p>
+            </div>
+        </div>
+    <div class="printer-card">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/download%20no%20bg.png" alt="Printer">
+            <div class="printer-info">
+                <h4>Creality Ender V3 SE</h4>
+                <p>Build volume: 220 × 220 × 240 mm
+                   Print speed : up to 250 mm/s & max acceleration ~ 2500 mm/s²
+                   Materials usable: PLA, PETG, and TPU.</p>
+            </div>
+        </div>
+        
+    </div>
+
+</section>
+
+<footer>
+    © 2026 Department of Science and Technology - Advanced Manufacturing Center (AMCen)
+</footer>
+
+</body>
+</html>

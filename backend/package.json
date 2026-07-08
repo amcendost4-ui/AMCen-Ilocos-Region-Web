@@ -1,0 +1,16 @@
+{
+  "name": "dost-amcen-booking",
+  "version": "1.0.0",
+  "description": "DOST AMCen Booking Request Form Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.3",
+    "twilio": "^6.0.2"
+  }
+}

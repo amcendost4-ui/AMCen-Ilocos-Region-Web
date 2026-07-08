@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "pwa-msedge",
+      "request": "launch",
+      "name": "Launch Edge",
+      "url": "file:///C:/Users/amcen/OneDrive/Desktop/AMCENXDOSTWEBSITE/Main%20page%20pc.html",
+      "webRoot": "${workspaceFolder}",
+      "runtimeArgs": ["--no-first-run", "--no-default-browser-check"],
+      "sourceMapPathOverrides": {
+        "webpack:///./~/*": "${webRoot}/node_modules/*",
+        "webpack:///../*": "${webRoot}",
+        "webpack:///src/*": "${webRoot}/src/*"
+      }
+    },
+    {
+      "type": "pwa-chrome",
+      "request": "launch",
+      "name": "Launch Chrome",
+      "runtimeExecutable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      "url": "file:///C:/Users/amcen/OneDrive/Desktop/AMCENXDOSTWEBSITE/Main%20page%20pc.html",
+      "webRoot": "C:\\Users\\amcen\\OneDrive\\Desktop\\AMCENXDOSTWEBSITE",
+      "userDataDir": "C:\\Users\\amcen\\OneDrive\\Desktop\\AMCENXDOSTWEBSITE\\.vscode\\chrome-debug",
+      "runtimeArgs": ["--remote-debugging-port=9222", "--no-first-run", "--no-default-browser-check"],
+      "sourceMapPathOverrides": {
+        "webpack:///./~/*": "${webRoot}/node_modules/*",
+        "webpack:///../*": "${webRoot}",
+        "webpack:///src/*": "${webRoot}/src/*"
+      }
+    }
+  ]
+}
