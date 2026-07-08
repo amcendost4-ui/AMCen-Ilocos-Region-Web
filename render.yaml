@@ -3,7 +3,6 @@ services:
     name: dostxamcen-website
     env: node
     plan: free
-    nodeVersion: 20
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/health
