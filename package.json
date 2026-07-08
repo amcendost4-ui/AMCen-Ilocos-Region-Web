@@ -5,6 +5,11 @@
   "engines": {
     "node": ">=20 <25"
   },
+  "overrides": {
+    "sqlite3": {
+      "build": true
+    }
+  },
   "dependencies": {
     "body-parser": "^2.3.0",
     "cors": "^2.8.6",
