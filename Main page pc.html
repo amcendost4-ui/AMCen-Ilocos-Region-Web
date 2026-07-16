@@ -98,7 +98,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
+            padding: 10px 10px 10px 0;
             background-color: #489dce;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -106,20 +106,30 @@
         .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 0;
+            margin-left: 0;
+            padding-left: 0;
+        }
+
+        .brand img {
+            margin: 3;
+            padding: 3;
         }
 
         .brand img.region-logo {
-            width: 90px;
+            width: 70px;
             height: auto;
             object-fit: contain;
+            margin-left: -14px;
+            margin-right: 10px;
         }
 
         .brand img.dost-logo {
-            width: 250px;
-            max-height: 70px;
+            width: 220px;
+            max-height: 60px;
             height: auto;
             object-fit: contain;
+            margin-right: 5px;
         }
 
         .DOSTXAMCen {
@@ -418,7 +428,7 @@
 <body>
     <header>
         <div class="brand">
-            <img src="https://uploads.onecompiler.io/43b2wmpjm/1782721418156/cropped%20logo.png" class="dost-logo" alt="DOST La Union logo" loading="lazy">
+            <img src="https://uploads.onecompiler.io/43b2wmpjm/1784166260813/dost%20logo.png" class="dost-logo" alt="DOST La Union logo" loading="lazy">
             <img src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Amcen%20ilocos%20region.png" class="region-logo" alt="Ilocos Region logo" loading="lazy">
             <h1 class="DOSTXAMCen">Advanced Manufacturing Center </h1>
         </div>
@@ -448,18 +458,17 @@
         <img class="feature-side feature-side-right" src="https://uploads.onecompiler.io/43b2wmpjm/1782876644743/4_Sciglat%20cropped.png" alt="right side decoration">
         <button class="feature amcen-logo" type="button" onclick="navigateTo('DOSTXAMCen')">
             <img class="feature-icon" src="https://uploads.onecompiler.io/43b2wmpjm/44r6pg6jy/Amcen%20ilocos%20region.png" alt="AMCen logo">
-            DOST&AMCen
+            DOST AMCen Ilocos Region
         </button>
         <button class="feature" type="button" onclick="navigateTo('online booking')">
             <img class="feature-icon" src="https://img.icons8.com/?size=80&id=GbPt0laX9TA4&format=png" alt="Booking icon">
-            Booking
+            Request
         </button>
         <button class="feature" type="button" onclick="navigateTo('Map')">
-            <img class="feature-icon" src="https://img.icons8.com/ios-filled/50/ffffff/school.png" alt="Academic program icon">Building
-        </button>
+            <img class="feature-icon" src="https://img.icons8.com/ios-filled/50/ffffff/school.png" alt="Academic program icon">Facility
         <button class="feature" type="button" onclick="navigateTo('OrganizationalChart')">
             <img class="feature-icon" src="https://img.icons8.com/?size=48&id=2jHmblEslKYm&format=png" alt="DOST tree icon">
-            DOST tree
+            Org chart
         </button>
         <button class="feature" type="button" onclick="navigateTo('Other')">
             <img class="feature-icon" src="https://img.icons8.com/?size=80&id=cc3cXGydaPtm&format=png" alt="Other icon">
@@ -505,14 +514,6 @@
           ? 'http://127.0.0.1:3000/api' 
           : '/api';
         const LOCAL_NEWS_FALLBACK = [
-            {
-                id: 1781165833695,
-                title: 'Tralalelo tralala',
-                date: '2026-06-11',
-                category: 'DOST',
-                description: 'heloo',
-                image_path: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAApoAAAF3CAYAAAAFPus+AAAAAXNSR0IArs4c6QAAIABJREFUeF7svQeUZVd1Lbr2PvncUKmzWhEFECJZgEQWNlHAA8OQwM8gE55lnmyw+fb7PP4b41GM/7+/QRj42GALi/BMMFYbg0myhIC2CTJGCeVuqaWWutWpct144v5/rn1OVbUAg1B3q7t63TGqq+qGc86e59Tteedacy5FchMEBAFBQBAQBAQBQUAQEAQOAwLqMGxTNikICAKCgCAgCAgCgoAgIAiQEE25CAQBQUAQEAQEAUFAEBAEDgsCQjQPC6yyUUFAEBAEBAFBQBAQBAQBIZpyDQgCgoAgIAgIAoKAICAIHBYEhGgeFlhlo4KAICAICAKCgCAgCAgCQjTlGhAEBAFBQBAQBAQBQUAQOCwICNE8LLDKRgUBQUAQEAQEAUFAEBAEhGjKNSAICAKCgCAgCAgCgoAgcFgQEKJ5WGCVjQoCgoAgIAgIAoKAICAICNGUa0AQEAQEAUFAEBAEBAFB4LAgIETzsMAqGxUEBAFBoEJgclKffYdx8dudT1Q5TU6Wgo0gIAgIAscLAkI0j5czLesUBASBI4rABRdMunvbD0bDfVNrHppZ2JgXRTm6af3eTSc4e+/csiU9ogcjOxMEBAFB4DFCQIjmYwS87FYQEARWJwIgmLuLO8bmZvedOlzonZkl2VlpMjyNXCcLxsZvmli38dozgyfdu3XrZL46EZBVCQKCgCCwjIAQTbkaBAFBQBA4JAgYdfrL39iafmDX43qzM8+iYf98pyifEIbx+ihqNArHSXLl3hW1W387fsL4V2/7xhfmDsluZSOCgCAgCBzFCAjRPIpPjhyaICAIHBsITE5O6n+6Y2bizpuuf3oyO3dhM/Se55XFiWtbrdhzXN9VWqelyRPl7nKjxv8aWXfCp3587ad3HRurk6MUBAQBQeBXR0CI5q+OnbxSEBAEBAFCqXw6uuvk+7bf8xv9udkXtePgvKbvrxuJw7ChHXJNQT5wUg4NjD5QOOHfqvG1f33jd/7+PiIyAqEgIAgIAqsZASGaq/nsytoEAUHgsCJw3m+/o71n+z1n7X/wgf9UJN2XjrVbZ4y1mw2XjBe7mmLtkEeZJZpElBh/euiGn3faaz7+/ec94V5xoB/W0yMbFwQEgaMAASGaR8FJkEMQBASBYw+Bp73lPWsfuvGm58/s3v1KM1x87thIfMKGdWvCVhSoMkvJ10SRUpZoKk2lIkrImxo6jc+p5vjHt17zuR2iaB57512OWBAQBB4ZAkI0Hxle8mxBQBA47hEw6nlv+T/W3H3Dza+Y2vnAxeOxf+6a0eZYu+F5se+SqxUpU5AqcwpMQZ4y5DuGCqVpQMG+oRN+hpqjf/2db37hgeMeSgFAEBAEVj0CQjRX/SmWBQoCgsChQuCiiy5y7lpobprdc+A1s3t3va6pvadtmGg3Jtqx47uGlEnI05ocTWSylHSZUuASOYooJ0UDHezqe/EVZRh/cus3t+w7VMcl2xEEBAFB4GhFQIjm0Xpm5LgEAUHgqELg3Esv9Yr701Me3HHPG4fzvf/U8t0z1o6OxCORr2KPKPKhZKZkoGR6LmkqSeVD8lxNShFlpE1f+TsGbvTRftD63Pcl3uioOr9yMIKAIHB4EBCieXhwla0KAoLAKkLggslJd9937nnC7L49b0k6CxeG2j1lohUH7TCkZuhS6BhqhA6pMqE8HVIY+OQpIlWk5DpESikalKbsKve2gd/80KI38eUffPVTnVUEkSxFEBAEBIGfiYAQTbkwBAFBQBD4DxAAyUxvmTn5tpt//Ptpt/Obo3G4qRWF/lirRU3fp3bkkSqHFHuKPFWQLgsKfJ/ybEAOejQdRRhu3i9M1tX+D/tu44P9/sh1W7d+ZijACwKCgCCw2hEQornaz7CsTxAQBB4NAuqcl1962tQ'
-            }
         ];
 
         const getStoredNews = () => {
